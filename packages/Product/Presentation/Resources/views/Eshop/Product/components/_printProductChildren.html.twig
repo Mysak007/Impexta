@@ -1,0 +1,14 @@
+{% macro render(category) %}
+    {% import _self as self %}
+    <ul class="SideNavigation-subCategories">
+        {% for childCategory in category.children %}
+            <li class="SideNavigation-subCategory">
+                <a href="{{ path('product_eshop_product_list', {'categorySlug': childCategory.slug}) }}"
+                   class="SideNavigation-subCategoryLink">
+                    {{ childCategory }}
+                </a>
+            </li>
+            {{ self.render(childCategory) }}
+        {% endfor %}
+    </ul>
+{% endmacro %}

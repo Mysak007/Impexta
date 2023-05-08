@@ -1,0 +1,182 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@carservice/CRM/business_case/business_case_file_macro.html.twig' as file_macro %}
+{% import '@carservice/CRM/business_case/business_case_image_macro.html.twig' as image_macro %}
+{% import '@MicroshopSymfonySurvivalKit/components/select2.html.twig' as select2 %}
+
+{% block custom_title %}Detail servisního požadavku č. {{ business_case.id }}{% endblock %}
+{% block custom_page_title %}Detail servisního požadavku č. {{ business_case.id }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ encore_entry_link_tags('businessCaseForm') }}
+    {{ select2.init_stylesheets() }}
+{% endblock %}
+
+{% block page_javascripts %}
+    {{ encore_entry_script_tags('businessCaseForm') }}
+{% endblock %}
+
+{% block back_path %}{{ path('car_service_crm_car_service_list') }}{% endblock %}
+
+{% set allow_edit = true %}
+{% block edit_path %}
+    {{ path('car_service_crm_car_service_edit', {'id':business_case.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Servisní požadavek č. {{ business_case.id }}</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Klient:</b> <span
+                                class="pull-right">{{ business_case.client.personalDetails.name }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Stav:</b> <span class="pull-right">{{ business_case.state.readable }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Pojistná událost:</b> <span
+                                class="pull-right">{% if business_case.insuredEvent %}ANO{% else %}NE{% endif %}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Odhadovaná cena:</b> <span
+                                class="pull-right">{{ business_case.priceEstimate|money }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Konečná cena:</b> <span class="pull-right">{{ business_case.finalPrice|money }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Převzato dne:</b> <span
+                                class="pull-right">{{ business_case.takenInAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Datum realizace:</b> <span
+                                class="pull-right">{{ business_case.realizationAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Datum předání:</b> <span
+                                class="pull-right">{{ business_case.handOverAt|date('Y-m-d') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Údaje o vozidle</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Vozidlo:</b> <span
+                                class="pull-right">{{ business_case.vehicle.clientCar.car.__toString }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Stav paliva:</b> <span class="pull-right">{{ business_case.vehicle.fuelState }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poznámka:</b> <span class="pull-right">{{ business_case.vehicle.note }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {% for communication in communications %}
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <span class="box-title">Zpráva </span>
+                        <a href="{{ path('car_service_crm_car_service_communication_edit',{
+                            'id':business_case.id,
+                            'communication_id':communication.id
+                        }) }}" class="pull-right"><i class="far fa-edit"></i></a>
+                    </div>
+                    <div class="box-body box-profile">
+                        <ul class="list-group list-group-unbordered">
+                            <li class="list-group-item">
+                                <b>Zpráva přijata:</b> <span
+                                    class="pull-right">{{ communication.communicatedAt|date('Y-m-d') }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Komunikační kanál:</b> <span
+                                    class="pull-right">{{ communication.channel.readable }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <b>Zpráva:</b> <span class="pull-right">{{ communication.communication }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <a href="{{ path('car_service_crm_car_service_communication_create',{'id':business_case.id}) }}"
+               class="btn btn-primary pull-right">Přidat zprávu</a>
+
+        </div>
+        <div class="col-md-8">
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-md-6">
+                    {% if business_case.files is not empty %}
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                {% for file in business_case.files %}
+                                    <a href="{{ path('car_service_crm_car_service_download_file',{'id':business_case.id,'file_id':file.id}) }}" target="_blank">{{ file.filename }}</a>
+                                    <br>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="business-case-files"
+                         data-prototype="{{ file_macro.printRow(form.files.vars.prototype)|e('html_attr') }}"
+                         data-count="{{ form.files | length }}">
+                    </div>
+                    <button
+                        type="button"
+                        class="add-files-row btn btn-primary"
+                        data-collection-holder-class="business-case-files">
+                        Přidat soubor
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    {% if business_case.images is not empty %}
+                        <div class="box box-primary">
+                            <div class="box-body box-profile">
+                                <div class="gallery">
+                                    {% for image in business_case.images %}
+                                        <a href="{{ vich_uploader_asset(image) }}">
+                                            <img class="img-bordered"
+                                                 src="{{ vich_uploader_asset(image) | imagine_filter('business_case_detail_thumbnail') }}"
+                                                 data-lightbox="gallery"/>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="business-case-images"
+                         data-prototype="{{ image_macro.printRow(form.images.vars.prototype)|e('html_attr') }}"
+                         data-count="{{ form.images | length }}">
+                    </div>
+                    <button
+                        type="button"
+                        class="add-images-row btn btn-primary"
+                        data-collection-holder-class="business-case-images">
+                        Přidat obrázek
+                    </button>
+                </div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success pull-right">Uložit</button>
+                </div>
+            </div>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+
+{% endblock %}

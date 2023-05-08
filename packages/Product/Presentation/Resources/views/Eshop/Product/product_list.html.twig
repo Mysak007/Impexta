@@ -1,0 +1,47 @@
+{% extends 'Eshop/base.html.twig' %}
+
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import '@product/Eshop/Product/components/_sideNavigation.html.twig' as sideNavigation %}
+{% import '@product/Eshop/Product/components/_breadcrumbsNavigation.html.twig' as breadcrumbsNavigation %}
+{% import '@product/Eshop/Product/components/_pageHeadline.html.twig' as pageHeadline %}
+{% import '@product/Eshop/Product/components/_sorting.html.twig' as sorting %}
+{% import '@product/Eshop/Product/components/_productContainer.html.twig' as productContainer %}
+{% import '@product/Eshop/components/_pagination.html.twig' as pagination %}
+{% import 'Eshop/components/_banner.html.twig' as banner %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block body %}
+    {{ navigation.render }}
+    <main class="container">
+        {{ render(controller(
+            'Impexta\\Product\\Presentation\\Controller\\Eshop\\RenderSearchFormController::__invoke', {
+                'redirectPath': app.request.uri,
+            }
+        )) }}
+        <div class="ProductListingContainer">
+            <div class="SideNavigationWrapper">
+                {{ sideNavigation.render(categories) }}
+            </div>
+            <div class="ProductListing">
+                <div class="ProductListing-header">
+                    {{ pageHeadline.render(category) }}
+                    {{ sorting.render() }}
+                </div>
+                <div class="ProductListing-content">
+                    {% if pagination|length > 0 %}
+                    {% for item in pagination %}
+                        {{ productContainer.render(item) }}
+                    {% endfor %}
+                </div>
+                {{ pagination.render(pagination) }}
+            </div>
+            {% else %}
+                <div class="mt-5 m-5">Litujeme, ale v této kategorii zatím nemáme žádné produkty nebo neodpovídají filtrovanému vozidlu.</div>
+            {% endif %}
+        </div>
+    </main>
+    <section class="Homepage-banner">
+        {{ banner.render() }}
+    </section>
+    {{ footer.render() }}
+{% endblock %}

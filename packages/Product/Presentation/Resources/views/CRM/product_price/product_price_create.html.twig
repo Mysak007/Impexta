@@ -1,0 +1,30 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Vytvořit cenu k produktu {{ product.name }}{% endblock %}
+{% block custom_page_title %}Vytvořit cenu k produktu {{ product.name }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('product_crm_product_detail',{'id':product.id}) }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        {{ form_start(form) }}
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">{{ form_label(form.price) }}</div>
+                            <div class="col-md-10">{{ form_row(form.price.amount) }}</div>
+                            <div class="col-md-2">{{ form_row(form.price.code) }}</div>
+                            <div class="col-md-12">{{ form_row(form.clientGroup) }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+{% endblock %}

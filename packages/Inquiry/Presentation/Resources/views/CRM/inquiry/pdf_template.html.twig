@@ -1,0 +1,45 @@
+<html>
+<body>
+<h1>Poptávka č. {{ inquiry.id }}</h1>
+<table width="100%">
+    <tr>
+        <td>Klient: {{ inquiry.client.contactDetails.email }}</td>
+        <td>Sleva: {{ inquiry.sale }}</td>
+    </tr>
+    <tr>
+        <td>
+            Původ: {{ inquiry.origin }}
+        </td>
+        <td>
+            Obdrženo: {{ inquiry.receivedAt|date('d-m-y') }}
+        </td>
+        <td>
+            Expirace: {{ inquiry.expiration|date('d-m-y') }}
+        </td>
+    </tr>
+    <tr>
+        <td>Poznámka: {{ inquiry.note }}</td>
+    </tr>
+</table>
+
+<table width="50%">
+    <thead>Poptávané díly</thead>
+    {% for itemRequest in itemRequests %}
+        <tr>
+            <td>{{ itemRequest.productCard.name }}, {{ itemRequest.getItemRequestCar }},
+                {{ itemRequest.quantity }} ks, {{ itemRequest.note }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<table width="50%">
+    <thead>Nabízené díly</thead>
+    {% for itemOffer in itemOffers %}
+        <tr>
+            <td>{{ itemOffer.product.productCard.name }},
+                {% if itemOffer.warehouseProduct %}{{ itemOffer.warehouseProduct }},{% endif %}
+                {{ itemOffer.price|money }}</td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

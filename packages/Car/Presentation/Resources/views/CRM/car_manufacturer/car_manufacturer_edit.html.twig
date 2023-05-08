@@ -1,0 +1,26 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_page_title %}{{ manufacturer.name }}{% endblock %}
+{% block custom_page_subtitle %}Upravit{% endblock %}
+
+{% set allow_remove = true %}
+{% block back_path %}{{ path('car_crm_car_manufacturer_list') }}{% endblock %}
+{% block remove_path %}{{ path('car_crm_car_manufacturer_delete',{'id':manufacturer.id}) }}{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary table-box">
+        <div class="box-header">
+            <h3 class="box-title">Upravit
+            </h3>
+        </div>
+        <div class="box-body">
+            {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.showOnEshop) }}
+
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

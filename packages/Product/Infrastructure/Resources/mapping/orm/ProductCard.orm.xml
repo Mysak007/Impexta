@@ -1,0 +1,51 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Product\Domain\Entity\ProductCard" table="product_card">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="category" target-entity="Impexta\Product\Domain\Entity\Category" inversed-by="productCards">
+            <join-column name="category_id" nullable="false"/>
+        </many-to-one>
+
+        <field name="originalCode" type="string" nullable="true"/>
+
+        <field name="name" type="string"/>
+
+        <field name="vatRate" type="vat_rate"/>
+
+        <field name="guarantee" type="guarantee"/>
+
+        <field name="description" type="text" nullable="true"/>
+
+        <field name="note" type="text" nullable="true"/>
+
+        <one-to-many field="cars" target-entity="Impexta\Product\Domain\Entity\CompatibleCar" mapped-by="productCard">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="products" target-entity="Impexta\Product\Domain\Entity\Product" mapped-by="productCard">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <field name="createdAt" type="datetime_immutable"/>
+
+        <field name="updatedAt" type="datetime_immutable"/>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

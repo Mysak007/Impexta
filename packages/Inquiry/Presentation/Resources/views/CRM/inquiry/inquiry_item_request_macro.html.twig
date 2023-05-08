@@ -1,0 +1,35 @@
+{% macro printRow(form) %}
+    <div class="box box-primary non-collapsed-box"
+         data-controller="inquiry-item-collection">
+        <div class="box-header with-border">
+            <h3 class="box-title">Produkt</h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-basdasdox-tool"
+                        data-inquiry-item-collection-target="button">
+                    <i class="fa fa-minus" data-inquiry-item-collection-target="buttonSign"></i>
+                </button>
+            </div>
+        </div>
+        <div class="box-body box-profile" data-controller="inquiry-form-request-item">
+            {{ form_row(form.productCard) }}
+            {{ form_row(form.clientCar, {
+                'attr': {
+                    'data-inquiry-form-request-item-target': 'clientCarSelect',
+                    'data-action': 'update-client-cars@window->inquiry-form-request-item#updateClientCarChoices change->inquiry-form-request-item#updateClientCarSelect'
+                }
+            }) }}
+            {{ form_row(form.car, {
+                'attr': {
+                    'data-inquiry-form-request-item-target': 'carSelect',
+                    'data-action': 'change->inquiry-form-request-item#updateCarSelect'
+                }
+            }) }}
+            {{ form_row(form.quantity) }}
+            {{ form_row(form.note) }}
+
+            <button type="button" class="btn btn-danger"
+                    data-action="click->inquiry-form-collection#removeFormFromCollection">Odstranit
+            </button>
+        </div>
+    </div>
+{% endmacro %}

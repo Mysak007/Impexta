@@ -1,0 +1,49 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig' as label %}
+
+{% block custom_page_title %}Seznam produktů na skladě{% endblock %}
+{% block custom_page_subtitle %}{{ warehouse }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 1rem;">
+            <a href="{{ path('warehouse_crm_warehouse_issue_list',{'warehouse':warehouse.value}) }}"
+               class="btn btn-primary mt-2">Seznam
+                výdejek</a>
+        </div>
+    </div>
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Seznam produktů na skladu</h3>
+        </div>
+        <div class="box-body">
+            <div class="row col-md-12">
+                <table class="table table-bordered table-striped" data-controller="data-table">
+                    <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Originální kód</th>
+                        <th>Kód</th>
+                        <th>Výrobce</th>
+                        <th>Eshop</th>
+                        <th>Počet</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for warehouseProduct in warehouseProducts %}
+                        <tr role="row" class="odd">
+                            <td>{{ warehouseProduct['warehouse_product'].product.name }}</td>
+                            <td>{{ warehouseProduct['warehouse_product'].product.productCard.originalCode }}</td>
+                            <td>{{ warehouseProduct['warehouse_product'].product.code }}</td>
+                            <td>{{ warehouseProduct['warehouse_product'].product.manufacturer }}</td>
+                            <td>{{ label.render(warehouseProduct['warehouse_product'].product.showOnEshop, 'Ano', 'Ne') }}</td>
+                            <td>{{ warehouseProduct['on_stock'] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

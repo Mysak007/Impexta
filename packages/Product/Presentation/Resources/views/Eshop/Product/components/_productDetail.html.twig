@@ -1,0 +1,163 @@
+{% macro render(product, cars, breadcrumbs) %}
+    {% import '@product/Eshop/Product/components/_breadcrumbsNavigation.html.twig' as breadcrumbsNavigation %}
+
+    <div class="ProductDetail ProductDetail--desktop">
+        {{ breadcrumbsNavigation.render(breadcrumbs) }}
+        <div class="ProductDetail-top ProductDetail-top--hidden">
+            <div class="ProductDetail-tagWrapper">
+                {% if product.doesNeedsExtraShipping == true %}
+                    <span class="ProductDetail-tag">
+                        Nadrozměrná doprava
+                    </span>
+                {% endif %}
+
+                {% if product.isActionProduct == true %}
+                    <span class="ProductDetail-tag">
+                        AKCE!
+                    </span>
+                {% endif %}
+            </div>
+
+            <div>
+                <h1 class="ProductDetail-headline">{{ product.name }}</h1>
+                <span class="ProductDetail-productCode">Kód produktu: {{ product.code }}</span>
+            </div>
+        </div>
+
+        <div class="ProductDetail-gallery ProductDetail-gallery--desktop">
+            <div class="swiper-container" id="productImage">
+                <div class="swiper-wrapper">
+                    {% set image = product.getMainProductImage ?? product.getProductImagesWithoutMain.first %}
+                    {% if image %}
+                        <div class="swiper-slide">
+                            <img
+                                class="ProductDetail-productImg"
+                                src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"/>
+                        </div>
+                    {% else %}
+                        <div class="swiper-slide">
+                            <img
+                                class="ProductDetail-productImg"
+                                src="https://via.placeholder.com/400x400?text=Impexta"/>
+                        </div>
+                    {% endif %}
+                    {% if product.getProductImagesWithoutMain|length > 0 %}
+                        {% for image in product.getProductImagesWithoutMain %}
+                            <div class="swiper-slide">
+                                <img
+                                    class="ProductDetail-productImg"
+                                    src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"/>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            <div id="thumbs" class="swiper-container ProductDetail-galleryThumbnails">
+                <div class="swiper-wrapper">
+                    {% if product.getImages|length > 0 %}
+                        {% for image in product.getImages %}
+                            <div class="swiper-slide">
+                                <img
+                                    src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"/>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            {# {{ productGallery.render () }} #}
+        </div>
+
+        <div class="ProductDetail-content ProductDetail-content--desktop">
+            <div class="ProductDetail-top--desktop">
+                <div>
+                    <span class="ProductDetail-productCode">Kód produktu: {{ product.code }}</span>
+                    <h1 class="ProductDetail-headline">{{ product.name }}</h1>
+                </div>
+                <div class="ProductDetail-tagWrapper">
+                    {% if product.doesNeedsExtraShipping == true %}
+                        <span class="ProductDetail-tag">
+                            Nadrozměrná doprava
+                        </span>
+                    {% endif %}
+
+                    {% if product.isActionProduct == true %}
+                        <span class="ProductDetail-tag">
+                            AKCE!
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <p>{{ product.productCard.description }}</p>
+            <p>{{ product.manufacturer }}</p>
+
+            <div class="ProductDetail-availability">
+                {% if product.getWarehouseProducts|length > 0 %}
+                    <span class="Stock Stock--inStock">Skladem</span>
+                {% endif %}
+
+                <div class="ProductDetail-storeStock">
+                    <div class="ProductDetail-storeBranches">
+                        <p>Praha:</p>
+                        <p>Ostrava:</p>
+                        <p>Žilina:</p>
+                    </div>
+
+                    <div class="ProductDetail-storeBranches">
+                        <p>{{ 'stock' | trans({'count': product.countInWarehouse('PRAGUE')}) }}</p>
+                        <p>{{ 'stock' | trans({'count': product.countInWarehouse('OSTRAVA')}) }}</p>
+                        <p>{{ 'stock' | trans({'count': product.countInWarehouse('ZILINA')}) }}</p>
+                    </div>
+                </div>
+
+                {% set delivery_date = delivery_date(product) %}
+                <p class="deliveryTime">Dodací lhůta:
+                    {% if delivery_date %}
+                        {{ delivery_date | date('d.m.Y') }}
+                    {% else %}
+                        není známo
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="ProductDetail-pricing">
+                {% set prices = calculate_price(product,app.user,app.session.get('currency')) %}
+                <div>
+                    <ul class="ProductDetail-price {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2B') ? 'hidden' : '' }}"
+                        data-target="b2c">
+                        <li class="Price-main">Cena s DPH: {{ prices['B2CPrice']|money }}</li>
+                        <li class="Price-secondary">Cena bez DPH: {{ prices['B2CPriceWithoutVat']|money }}</li>
+                    </ul>
+                    <ul class="ProductDetail-price {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}"
+                        data-target="b2b">
+                        <li class="Price-main">Cena s DPH: {{ prices['withVat']|money }}</li>
+                        <li class="Price-secondary">Cena bez DPH: {{ prices['withoutVat']|money }}</li>
+                    </ul>
+                </div>
+                <div class="PriceSwitch ProductDetail-switchButton ">
+                    <button
+                        class="Button Button--small Button--primary {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}"
+                        data-type="b2b">
+                        B2B
+                    </button>
+                    <button
+                        class="Button Button--small {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}"
+                        data-type="b2c">
+                        B2C
+                    </button>
+                </div>
+            </div>
+            <div class="ProductDetail-cartButton">
+                <button type="submit" class="Button Button--primary add-to-cart" data-id="{{ product.id }}">
+                    <object type="image/svg+xml" data="{{ asset('build/svg/cart.svg') }}"
+                            class="ProductDetail-cartImg"></object>
+                    <span class="ProductDetail-addToCart">Přidat do košíku</span>
+                </button>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

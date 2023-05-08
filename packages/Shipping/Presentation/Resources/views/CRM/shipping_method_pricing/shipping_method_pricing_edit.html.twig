@@ -1,0 +1,41 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_page_title %}Upravit cenu dopravy{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% set allow_remove = true %}
+{% block back_path %}{{ path('shipping_crm_list_shipping_method_pricing') }}{% endblock %}
+{% block remove_path %}{{ path('shipping_crm_delete_shipping_method_pricing',{'id':pricing.id}) }}{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary table-box">
+        <div class="box-header">
+            <h3 class="box-title">Informace
+            </h3>
+        </div>
+        <div class="box-body">
+            <div class="row">
+                {{ form_start(form) }}
+                <div class="col-md-12">{{ form_row(form.name) }}</div>
+                <div class="col-md-12">{{ form_row(form.description) }}</div>
+                <div class="col-md-12">{{ form_row(form.shippingMethod) }}</div>
+                <div class="col-md-12">{{ form_row(form.country) }}</div>
+                <div class="col-md-12">{{ form_label(form.price) }}</div>
+                <div class="col-md-10">{{ form_row(form.price.amount) }}</div>
+                <div class="col-md-2">{{ form_row(form.price.code) }}</div>
+                <div class="col-md-12">{{ form_row(form.overWeightLimit) }}</div>
+                <div class="col-md-12">{{ form_label(form.overWeightPrice) }}</div>
+                <div class="col-md-10">{{ form_row(form.overWeightPrice.amount) }}</div>
+                <div class="col-md-2">{{ form_row(form.overWeightPrice.code) }}</div>
+                <div class="col-md-12">{{ form_label(form.cashOnDeliveryFee) }}</div>
+                <div class="col-md-10">{{ form_row(form.cashOnDeliveryFee.amount) }}</div>
+                <div class="col-md-2">{{ form_row(form.cashOnDeliveryFee.code) }}</div>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success pull-right">Upravit</button>
+                </div>
+                {{ form_row(form._token) }}
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

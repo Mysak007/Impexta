@@ -1,0 +1,72 @@
+{% macro render(product) %}
+    {% import '@product/Eshop/Product/components/_breadcrumbsNavigation.html.twig' as breadcrumbsNavigation %}
+    <div class="ProductDetail ProductDetail--desktop">
+        {{ breadcrumbsNavigation.render(product) }}
+        <div class="ProductDetail-gallery ProductDetail-gallery--desktop">
+            <div class="swiper-container" id="productImage">
+                <div class="swiper-wrapper">
+                    {% if product.getMainSecondHandProductImage %}
+                        <div class="swiper-slide">
+                            <img
+                                class="ProductDetail-productImg"
+                                src="{{ vich_uploader_asset(product.getMainSecondHandProductImage) | imagine_filter('product_image_thumbnail') }}"/>
+                        </div>
+                    {% else %}
+                        <div class="swiper-slide">
+                            <img
+                                class="ProductDetail-productImg"
+                                src="https://via.placeholder.com/400x400?text=Impexta"/>
+                        </div>
+                    {% endif %}
+                    {% if product.getSecondHandProductImagesWithoutMain|length > 0 %}
+                        {% for image in product.getSecondHandProductImagesWithoutMain %}
+                            <div class="swiper-slide">
+                                <img
+                                    class="ProductDetail-productImg"
+                                    src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"/>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            <div id="thumbs" class="swiper-container ProductDetail-galleryThumbnails">
+                <div class="swiper-wrapper">
+                    {% if product.getSecondHandProductImages|length > 0 %}
+                        {% for image in product.getSecondHandProductImages %}
+                            <div class="swiper-slide">
+                                <img
+                                    src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"/>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+        <div class="ProductDetail-content ProductDetail-content--desktop">
+            <div class="ProductDetail-top--desktop">
+                <div>
+                    <h1 class="ProductDetail-headline">{{ product.name }}</h1>
+                </div>
+            </div>
+            <p>{{ product.perex }}</p>
+            <p>{{ product.description }}</p>
+            <div class="ProductDetail-pricing">
+                <div>
+                    <ul class="ProductDetail-price">
+                        <li class="Price-main">{{ product.price|money }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ProductDetail-cartButton">
+                <button type="button" class="Button Button--icon Button--primary"
+                        data-id="{{ product.id }}" data-bs-toggle="modal" data-bs-target="#contact-form-modal">
+                    Mám zájem
+                </button>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

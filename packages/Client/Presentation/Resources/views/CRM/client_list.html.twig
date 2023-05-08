@@ -1,0 +1,50 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam klientů{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Seznam klientů</h3>
+        </div>
+        <div class="box-body">
+            <div class="row col-md-12">
+                <table class="table table-bordered table-striped" data-controller="data-table">
+                    <thead>
+                    <tr>
+                        <th>Jméno/Firma</th>
+                        <th>IČ</th>
+                        <th>Tel</th>
+                        <th>Email</th>
+                        <th>Fakturační adresa</th>
+                        <th>Dodací adresa</th>
+                        <th>Akce</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in clients %}
+                        <tr role="row" class="odd">
+                            <td>{{ client.getPersonalDetails.name }}</td>
+                            <td>{{ client.personalDetails.taxId }}</td>
+                            <td>{{ client.contactDetails.phone }}</td>
+                            <td>{{ client.contactDetails.email }}</td>
+                            <td>{{ client.billingAddress }}</td>
+                            <td>{{ client.getDefaultShippingAddress }}</td>
+                            <td><a href="{{ path('client_crm_client_detail', {'id':client.id}) }}"
+                                   class="btn btn-primary btn-sm">Detail</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{ add_button.render(path('client_crm_client_create')) }}
+{% endblock %}

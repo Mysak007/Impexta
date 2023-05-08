@@ -1,0 +1,26 @@
+{% macro render() %}
+    {% import '@order/Eshop/components/_radioButton.html.twig' as radioButton %}
+
+    <div class="FormPart">
+        <div class="FormPart-top">
+            <img src="{{ asset("build/svg/truck.svg") }}" alt="Shipping" width="32" height="32" />
+            <h2 class="FormPart-headline">Zvolte způsob dopravy</h2>
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--price">
+            {{ radioButton.render('shipping', "kuryr", "Kurýr") }}
+            <span>129 Kč</span>
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--price">
+            {{ radioButton.render('shipping', "express", "Kurýr Express") }}
+            <span>129 Kč</span>
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--price">
+            <label class="Form-radio" id="storesRadio" data-bs-toggle="modal" data-bs-target="#storesModal">
+                <input type="radio" name="shipping" value="osobne" />
+                <span class="Form-radioControl"></span>
+                <span class="Form-label">Osobní vyzvednutí na prodejně</span>
+            </label>
+            <span>129 Kč</span>
+        </div>
+    </div>
+{% endmacro %}

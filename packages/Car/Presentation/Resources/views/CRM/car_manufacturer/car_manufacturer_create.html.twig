@@ -1,0 +1,24 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_page_title %}Přidat výrobce{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('car_crm_car_manufacturer_list') }}{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary table-box">
+        <div class="box-header">
+            <h3 class="box-title">Informace
+            </h3>
+        </div>
+        <div class="box-body">
+            {{ form_start(form) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.showOnEshop) }}
+
+            <button type="submit" class="btn btn-success pull-right">Vytvořit</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

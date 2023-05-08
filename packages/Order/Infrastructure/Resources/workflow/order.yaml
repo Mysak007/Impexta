@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        order:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Impexta\Order\Domain\Entity\Order
+            initial_marking: !php/const Impexta\Order\Domain\Enum\OrderState::CART
+            places:
+                - !php/const Impexta\Order\Domain\Enum\OrderState::CART
+                - !php/const Impexta\Order\Domain\Enum\OrderState::NEW
+                - !php/const Impexta\Order\Domain\Enum\OrderState::CANCELLED
+                - !php/const Impexta\Order\Domain\Enum\OrderState::COMPLETED
+            transitions:
+                !php/const Impexta\Order\Domain\Enum\OrderStateTransition::CREATE:
+                    from: !php/const Impexta\Order\Domain\Enum\OrderState::CART
+                    to: !php/const Impexta\Order\Domain\Enum\OrderState::NEW
+                !php/const Impexta\Order\Domain\Enum\OrderStateTransition::CANCEL:
+                    from: !php/const Impexta\Order\Domain\Enum\OrderState::NEW
+                    to: !php/const Impexta\Order\Domain\Enum\OrderState::CANCELLED
+                !php/const Impexta\Order\Domain\Enum\OrderStateTransition::COMPLETE:
+                    from: !php/const Impexta\Order\Domain\Enum\OrderState::NEW
+                    to: !php/const Impexta\Order\Domain\Enum\OrderState::COMPLETED

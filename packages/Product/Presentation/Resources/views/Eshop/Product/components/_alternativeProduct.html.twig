@@ -1,0 +1,34 @@
+{% macro render(alternativeProduct) %}
+    <div class="HighlightedProduct">
+        <div class="HighlightedProduct-top">
+            <span class="HighlightedProduct-code">Kód produktu: {{ alternativeProduct.code }}</span>
+            {% if alternativeProduct.isActionProduct == true %}
+                <span class="ProductDetail-tag">
+                        AKCE!
+                    </span>
+            {% endif %}
+        </div>
+        <div class="HighlightedProduct-content">
+            <div class="HighlightedProduct-imageWrapper">
+                {% if alternativeProduct.getMainProductImage %}
+                    <img
+                        src="{{ vich_uploader_asset(alternativeProduct.getMainProductImage) | imagine_filter('product_image_thumbnail') }}"
+                        alt="{{ alternativeProduct.name }}"
+                        class="HighlightedProduct-image"/>
+                {% else %}
+                    <img src="https://www.americkeautodily.cz/foto/product/full/202009230857521.JPG"
+                         alt="{{ alternativeProduct.name }}"
+                         class="HighlightedProduct-image"/>
+                {% endif %}
+            </div>
+            <h3 class="HighlightedProduct-name">
+                <a href="{{ path('product_eshop_product_detail',{'categorySlug':alternativeProduct.productCard.category.slug,'productSlug':alternativeProduct.slug, 'productId':alternativeProduct.id}) }}"
+                   class="HighlightedProduct-link">{{ alternativeProduct.name }}</a>
+            </h3>
+            <p class="HighlightedProduct-description">
+                {# {{ alternativeProduct.description }} #} {# TODO #}
+                {{ alternativeProduct.productCard.description }}
+            </p>
+        </div>
+    </div>
+{% endmacro %}

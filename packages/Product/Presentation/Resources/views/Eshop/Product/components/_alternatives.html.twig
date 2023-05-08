@@ -1,0 +1,25 @@
+{% macro render(alternativesProducts) %}
+    {% import '@product/Eshop/Product/components/_alternativeProduct.html.twig' as alternativeProduct %}
+
+    <section class="ProductDetail-alternatives Highlighted">
+        <h2 class="Highlighted-alternatives">Alternativy</h2>
+
+        <div class="Highlighted-productsWrapper">
+            <div class="Highlighted-products" id="products">
+                <div class="Highlighted-products swiper-container" id="products">
+                    <div class="swiper-wrapper">
+                        {% for alternativeProduct in alternativesProducts %}
+                            <div class="swiper-slide">
+                                {{ alternativeProduct.render(alternativeProduct) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="swiper-pagination"></div>
+
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endmacro %}

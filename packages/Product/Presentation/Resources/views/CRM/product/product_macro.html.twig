@@ -1,0 +1,11 @@
+{% macro printRow(form) %}
+    <div class="box box-primary">
+        <div class="box-body box-profile">
+            {{ form_widget(form) }}
+            <button type="button" class="btn btn-danger"
+                    data-action="click->form-collection#removeFormFromCollection">
+                Odstranit
+            </button>
+        </div>
+    </div>
+{% endmacro %}

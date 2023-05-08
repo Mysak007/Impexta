@@ -1,0 +1,62 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam uživatelů{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>E-mail</th>
+                            <th>Aktivní</th>
+                            <th>Vytvořeno</th>
+                            <th>Poslední úprava</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for shopUser in shopUsers %}
+                            <tr>
+                                <td>
+                                    {{ shopUser.id }}
+                                </td>
+                                <td>
+                                    {{ shopUser.email }}
+                                </td>
+                                <td>
+                                    {{ label.render(shopUser.enabled) }}
+                                </td>
+                                <td>
+                                    {{ shopUser.createdAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    {{ shopUser.updatedAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('user_crm_shop_user_detail', {'id': shopUser.id}) }}"
+                                       class="btn btn-primary btn-sm">Otevřít</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {{ add_button.render(path('user_crm_shop_user_create')) }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

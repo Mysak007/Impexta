@@ -1,0 +1,51 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@MicroshopSymfonySurvivalKit/components/date_picker.html.twig' as date_picker %}
+
+{% block custom_title %}Úprava zprávy{% endblock %}
+{% block custom_page_title %}Úprava zprávy{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ date_picker.init_stylesheets() }}
+{% endblock %}
+
+{% block page_javascripts %}
+    {{ date_picker.init_javascript() }}
+{% endblock %}
+
+{% block back_path %}{{ path('car_service_crm_car_service_detail',{'id':businessCase.id}) }}{% endblock %}
+{% set allow_remove = true %}
+{% block remove_path %}
+    {{ path('car_service_crm_car_service_communication_delete',{
+        'id':businessCase.id,
+        'communication_id':communication.id
+    }) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        {{ form_start(form) }}
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Upravit zprávu</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        {{ form_row(form.communicatedAt) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.channel) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.communication) }}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+
+{% endblock %}

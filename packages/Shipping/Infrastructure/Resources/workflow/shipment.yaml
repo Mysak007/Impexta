@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        shipment:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Impexta\Shipping\Domain\Entity\Shipment
+            initial_marking: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::NEW
+            places:
+                - !php/const Impexta\Shipping\Domain\Enum\ShipmentState::NEW
+                - !php/const Impexta\Shipping\Domain\Enum\ShipmentState::READY
+                - !php/const Impexta\Shipping\Domain\Enum\ShipmentState::SHIPPED
+                - !php/const Impexta\Shipping\Domain\Enum\ShipmentState::CANCELLED
+            transitions:
+                !php/const Impexta\Shipping\Domain\Enum\ShipmentStateTransition::PREPARE:
+                    from: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::NEW
+                    to: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::READY
+                !php/const Impexta\Shipping\Domain\Enum\ShipmentStateTransition::CANCEL:
+                    from: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::READY
+                    to: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::CANCELLED                    
+                !php/const Impexta\Shipping\Domain\Enum\ShipmentStateTransition::SHIP:
+                    from: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::READY
+                    to: !php/const Impexta\Shipping\Domain\Enum\ShipmentState::SHIPPED                    

@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        payment:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Impexta\Order\Domain\Entity\Order
+            initial_marking: !php/const Impexta\Order\Domain\Enum\PaymentState::NEW
+            places:
+                - !php/const Impexta\Order\Domain\Enum\PaymentState::NEW
+                - !php/const Impexta\Order\Domain\Enum\PaymentState::PAID
+                - !php/const Impexta\Order\Domain\Enum\PaymentState::CANCELLED
+                - !php/const Impexta\Order\Domain\Enum\PaymentState::FAILED
+            transitions:
+                !php/const Impexta\Order\Domain\Enum\PaymentStateTransition::CANCEL:
+                    from: !php/const Impexta\Order\Domain\Enum\PaymentState::NEW
+                    to: !php/const Impexta\Order\Domain\Enum\PaymentState::CANCELLED
+                !php/const Impexta\Order\Domain\Enum\PaymentStateTransition::PAY:
+                    from: !php/const Impexta\Order\Domain\Enum\PaymentState::NEW
+                    to: !php/const Impexta\Order\Domain\Enum\PaymentState::PAID
+                !php/const Impexta\Order\Domain\Enum\PaymentStateTransition::FAIL:
+                    from: !php/const Impexta\Order\Domain\Enum\PaymentState::NEW
+                    to: !php/const Impexta\Order\Domain\Enum\PaymentState::FAILED                    

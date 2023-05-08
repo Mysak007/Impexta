@@ -1,0 +1,19 @@
+{% macro render(cartItems,totalPrice, wrapper) %}
+    {% import '@order/Eshop/components/cartComponents/_cartItem.html.twig' as cartItem %}
+    <div class="Cart">
+        <div class="Cart-content">
+            {% for item in cartItems %}
+                {{ cartItem.render(
+                    item.name,
+                    item.quantity,
+                    true,
+                    item.unitPrice,
+                    item.totalPrice,
+                    item.mainImage,
+                    wrapper
+                ) }}
+            {% endfor %}
+        </div>
+        <span class="Cart-sum">Cena za zboží: {{ totalPrice|money }}</span>
+    </div>
+{% endmacro %}

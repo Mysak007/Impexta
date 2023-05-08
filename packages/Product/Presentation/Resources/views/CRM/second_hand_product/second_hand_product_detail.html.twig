@@ -1,0 +1,70 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block back_path %}
+    {{ path('product_crm_second_hand_product_list') }}
+{% endblock %}
+{% block custom_page_title %}{{ product.name }} {% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% set allow_edit = is_granted(constant('Impexta\\Product\\Infrastructure\\Security\\SecondHandProductCrudVoter::EDIT'), product) %}
+{% block edit_path %}
+    {{ path('product_crm_second_hand_product_edit', {'id': product.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Název</b> <span class="pull-right">{{ product.name }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Úvod</b> <span class="pull-right">{{ product.perex }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Popis</b> <span class="pull-right">{{ product.description }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Cena</b> <span class="pull-right">{{ product.price | money }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Daňová sazba</b> <span class="pull-right">{{ product.vatRate }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Objednávka vytvořena</b> <span
+                                class="pull-right">{{ product.createdAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poslední úprava</b> <span class="pull-right">{{ product.updatedAt|date('Y-m-d') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    {% if product.mainSecondHandProductImage %}
+                        <img class="img-bordered"
+                             src="{{ vich_uploader_asset(product.mainSecondHandProductImage) | imagine_filter('second_hand_product_crm_detail_thumbnail') }}">
+                        {% for image in product.secondHandProductImagesWithoutMain %}
+                            <img class="img-bordered"
+                                 src="{{ vich_uploader_asset(image) | imagine_filter('second_hand_product_crm_detail_thumbnail') }}"/>
+                        {% endfor %}
+                    {% else %}
+                        {% for image in product.secondHandProductImages %}
+                            <img class="img-bordered"
+                                 src="{{ vich_uploader_asset(image) | imagine_filter('second_hand_product_crm_detail_thumbnail') }}"/>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}Seznam objednávek{% endblock %}
+{% block custom_page_title %}Seznam objednávek{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Číslo objednávky</th>
+                            <th>Klient</th>
+                            <th>Doprava</th>
+                            <th>Platba</th>
+                            <th>Doručovací adresa</th>
+                            <th>Stav</th>
+                            <th>Stav platby</th>
+                            <th>Stav dopravy</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.number }}</td>
+                                <td>{{ order.client.getPersonalDetails.name }}</td>
+                                <td>{{ order.shipment.shippingMethod }}</td>
+                                <td>{{ order.payment.paymentMethod }}</td>
+                                <td>{{ order.shippingAddress }}</td>
+                                <td>
+                                    <div class="label bg-green">
+                                        {{ order.state }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="label bg-green">
+                                        {{ order.payment.state.readable }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="label bg-green">
+                                        {{ order.shipment.state.readable }}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ add_button.render(path('order_crm_order_create')) }}
+{% endblock %}

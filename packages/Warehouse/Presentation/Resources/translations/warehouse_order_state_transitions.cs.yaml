@@ -1,0 +1,6 @@
+ORDER: 'Objednat'
+CANCEL: 'Zrušit'
+RECEIVE: 'Příjmout'
+PARTIALLY_RECEIVE: 'Částečně příjmout'
+PARTIALLY_CANCEL: 'Částečně zrušit'
+    

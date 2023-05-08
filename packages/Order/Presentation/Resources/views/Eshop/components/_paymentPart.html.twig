@@ -1,0 +1,30 @@
+{% macro render() %}
+    {% import '@order/Eshop/components/_radioButton.html.twig' as radioButton %}
+    <div class="FormPart">
+        <div class="FormPart-top">
+            <img src="{{ asset("build/svg/payment.svg") }}" alt="Shipping" width="32" height="32" />
+            <h2 class="FormPart-headline">Zvolte způsob platby</h2>
+        </div>
+        <div class="Form-inputWrapper">
+            <div class="Form-inputWrapper Form-inputWrapper--price">
+                {{ radioButton.render('payment', "online", "Online platba kartou") }}
+                <span>Zdarma</span>
+            </div>
+            <span class="Form-inputDescription">Okamžitá platba přes platební bránu GoPay</span>
+        </div>
+        <div class="Form-inputWrapper">
+            <div class="Form-inputWrapper Form-inputWrapper--price">
+                {{ radioButton.render('payment', "transfer", "Online bankovní převod") }}
+                <span>Zdarma</span>
+            </div>
+            <span class="Form-inputDescription">Rychlý převod peněz z vybraných bank</span>
+        </div>
+        <div class="Form-inputWrapper">
+            <div class="Form-inputWrapper Form-inputWrapper--price">
+                {{ radioButton.render('payment', "onSite", "Hotově na prodejně") }}
+                <span>Zdarma</span>
+            </div>
+            <span class="Form-inputDescription">Objednávku zaplatíte při odběru na prodejně</span>
+        </div>
+    </div>
+{% endmacro %}

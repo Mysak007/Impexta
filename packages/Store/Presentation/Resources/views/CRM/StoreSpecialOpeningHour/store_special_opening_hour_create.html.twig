@@ -1,0 +1,39 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@MicroshopSymfonySurvivalKit/components/date_picker.html.twig' as date_picker %}
+
+{% block custom_title %}Vytvořit sváteční otevírací dobu pro pobočku {{ store.name }}{% endblock %}
+{% block custom_page_title %}Vytvořit sváteční otevírací dobu pro pobočku {{ store.name }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('store_crm_store_special_opening_hours_list',{'id':store.id}) }}{% endblock %}
+
+{% block page_stylesheets %}{{ date_picker.init_stylesheets() }}{% endblock %}
+{% block page_javascripts %}{{ date_picker.init_javascript() }}{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Vytvořit sváteční otevírací dobu pro pobočku {{ store.name }}
+                    </h3>
+                </div>
+                <div class="box-body">
+                    {{ form_row(form.day) }}
+                    {{ form_row(form.open) }}
+                    {{ form_row(form.opensAt) }}
+                    {{ form_row(form.closesAt) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+    </div>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

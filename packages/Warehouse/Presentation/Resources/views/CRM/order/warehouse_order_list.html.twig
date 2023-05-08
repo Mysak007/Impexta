@@ -1,0 +1,69 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam objednávek na sklad{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Sklad</th>
+                            <th>Stav</th>
+                            <th>Vytvořil</th>
+                            <th>Vytvořeno</th>
+                            <th>Poslední úprava</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>
+                                    {{ order.id }}
+                                </td>
+                                <td>
+                                    {{ order.warehouse }}
+                                </td>
+                                <td>
+                                    {{ order.stateReadable }}
+                                </td>
+                                <td>
+                                    {{ order.creator.username|default('-----') }}
+                                </td>
+                                <td>
+                                    {{ order.createdAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    {{ order.updatedAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    {% if is_granted(constant('Impexta\\Warehouse\\Infrastructure\\Security\\WarehouseOrderVoter::VIEW'), order) %}
+                                        <a href="{{ path('warehouse_crm_warehouse_order_detail', {'id': order.id}) }}"
+                                           class="btn btn-primary btn-sm">Otevřít</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if is_granted(constant('Impexta\\Warehouse\\Infrastructure\\Security\\WarehouseOrderVoter::CREATE'), order) %}
+                            {{ add_button.render(path('warehouse_crm_warehouse_order_create')) }}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

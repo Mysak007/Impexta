@@ -1,0 +1,18 @@
+{% macro render(categories) %}
+    {% import '@product/Eshop/Product/components/_printProductChildren.html.twig' as printProductChildren %}
+
+    <nav class="SideNavigation">
+        <h2 class="SideNavigation-header">Náhradní díly</h2>
+        <div class="SideNavigation-content">
+            {% for category in categories %}
+                <div class="SideNavigation-category">
+                    <a href="{{ path('product_eshop_product_list', {'categorySlug': category.slug}) }}"
+                       class="SideNavigation-categoryLink">
+                        {{ category }}
+                    </a>
+                    {{ printProductChildren.render(category) }}
+                </div>
+            {% endfor %}
+        </div>
+    </nav>
+{% endmacro %}

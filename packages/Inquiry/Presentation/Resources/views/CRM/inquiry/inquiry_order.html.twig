@@ -1,0 +1,55 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Převést poptávku č. {{ inquiry.id }} na objednávku{% endblock %}
+{% block custom_page_title %}Převést poptávku č. {{ inquiry.id }} na objednávku{% endblock %}
+
+{% block back_path %}
+    {{ path('inquiry_crm_inquiry_detail',{'id':inquiry.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Informace</h3>
+                </div>
+                <div class="box-body box-profile">
+                    {{ form_start(create_order_form) }}
+                    {{ form_row(create_order_form.shipment) }}
+                    {{ form_row(create_order_form.payment) }}
+
+                    {% for key,itemRequest in inquiry.itemRequests %}
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-1 text-center">
+                                <input type="checkbox" id="inquiry_create_order__itemOffers_{{ key }}_isSelected"
+                                       name="inquiry_create_order_[itemOffers][{{ key }}][isSelected]"
+                                       value="1">
+                            </div>
+                            <div class="col-md-4 text-center">{{ itemRequest.productCard.name }}</div>
+                            <div class="col-md-7">
+                                <select
+                                    id="inquiry_create_order__itemOffers_{{ key }}_inquiryItemOffer"
+                                    name="inquiry_create_order_[itemOffers][{{ key }}][inquiryItemOffer]"
+                                    class="select2 form-control">
+                                    {% for itemOffer in itemRequest.itemOffers %}
+                                        <option value="{{ itemOffer.id }}">{{ itemOffer.product }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+                        </div>
+                    </div>
+
+                    {{ form_row(create_order_form._token) }}
+                    {{ form_end(create_order_form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

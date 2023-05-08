@@ -1,0 +1,53 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+{% import '@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig' as boolean_label %}
+
+{% block custom_title %}Seznam svátků pro pobočku {{ store.name }}{% endblock %}
+{% block custom_page_title %}Seznam svátků pro pobočku {{ store.name }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('store_crm_store_list') }}{% endblock %}
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Seznam svátků pro pobočku {{ store.name }}</h3>
+                    {{ add_button.render(path('store_crm_store_special_opening_hours_create',{'id': store.id})) }}
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Otevřeno</th>
+                            <th>Otevřeno od</th>
+                            <th>Otevřeno do</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for openingHour in storeSpecialOpeningHours %}
+                            <tr>
+                                <td>{{ openingHour.day|date('d-m-Y') }}</td>
+                                <td>{{ boolean_label.render(openingHour.open) }}</td>
+                                <td>{% if openingHour.opensAt %}{{ openingHour.opensAt|date('H:i') }}{% else %}-----{% endif %}</td>
+                                <td>{% if openingHour.closesAt %}{{ openingHour.closesAt|date('H:i') }}{% else %}-----{% endif %}</td>
+                                <td>
+                                    <a href="{{ path('store_crm_store_special_opening_hours_update',{'id':store.id,'openingHour':openingHour.id}) }}"
+                                       class="btn btn-sm btn-primary">Upravit</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

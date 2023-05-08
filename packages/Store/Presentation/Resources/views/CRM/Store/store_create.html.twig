@@ -1,0 +1,81 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@store/CRM/Store/store_macro.html.twig' as macro %}
+
+{% block custom_title %}Vytvořit pobočku{% endblock %}
+{% block custom_page_title %}Vytvořit pobočku{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('store_crm_store_list') }}{% endblock %}
+
+{% block page_javascripts %}
+    <script type="text/javascript" src="https://secure.smartform.cz/api/v1/smartform.js" async></script>
+    <script type="text/javascript">
+        {# This must be here – it does not work when processed by Webpack #}
+        var smartform = smartform || {};
+
+        smartform.beforeInit = () => {
+            smartform.setClientId('{{ SMARTFORM_CLIENT_ID }}');
+        }
+
+        const country = document.getElementById("store__country");
+
+        country.addEventListener("change", (event) => {
+            const select = event.currentTarget;
+            const countryCode = select.options[select.selectedIndex].dataset.code;
+
+            const instanceIds = smartform.getInstanceIds();
+            instanceIds.forEach(function (instanceId) {
+                smartform.getInstance(instanceId).setCountry(countryCode);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form,{'attr': {'data-controller': 'form-collection'}}) }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Vytvořit pobočku
+                    </h3>
+                </div>
+                <div class="box-body">
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.country) }}
+                    {{ form_row(form.address) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="box box-primary table-box">
+                <div class="box-body">
+                    {{ form_row(form.contactInformation) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div data-form-collection-target = "prototypeDiv"
+                 data-prototype="{{ macro.printRow(form.openingHours.vars.prototype)|e('html_attr') }}"
+                 data-count="{{ form.openingHours | length }}">
+            </div>
+            {{ form_row(form.openingHours) }}
+
+            <button type="button" class="add-row btn btn-primary"
+                    data-action="click->form-collection#addFormToCollection">Přidat
+                otevírací dobu
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+    </div>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

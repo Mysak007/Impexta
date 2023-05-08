@@ -1,0 +1,60 @@
+{% extends 'Eshop/base.html.twig' %}
+
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import '@product/Eshop/Product/components/_secondHandProductDetail.html.twig' as productDetail %}
+{% import 'Eshop/components/_banner.html.twig' as banner %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block flashMessages %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block body %}
+    {{ navigation.render() }}
+
+    <main class="container container--no-pull">
+        {{ productDetail.render(product) }}
+        <div class="modal fade" id="contact-form-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Zjistit dostupnost</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_start(form) }}
+                        <div class="mb-2">
+                            {{ form_label(form.email) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_widget(form.email, {'attr': {'value': app.user.email|default('Váš email')}}) }}
+                        </div>
+                        <div class="mb-2">
+                            {{ form_label(form.text) }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form_widget(form.text, {'value': 'Měl bych zájem o %s, je k dispozici?'|format(product.name) }) }}
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Zpět</button>
+                        {{ form_row(form.submit) }}
+                        {{ form_row(form._token) }}
+                        {{ form_end(form, {'render_rest': false}) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <section class="Homepage-banner">
+        {{ banner.render() }}
+    </section>
+    {{ footer.render() }}
+{% endblock %}

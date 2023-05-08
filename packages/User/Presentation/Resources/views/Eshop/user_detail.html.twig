@@ -1,0 +1,19 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+{% import '@product/Eshop/Product/components/_pageHeadline.html.twig' as headline %}
+{% import '@user/Eshop/components/_ordersHistory.html.twig' as ordersHistory %}
+{% import '@user/Eshop/components/_storedAddresses.html.twig' as storedAddresses %}
+{% import '@user/Eshop/components/_storedCars.html.twig' as storedCars %}
+
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container">
+        {{ headline.render(user.client ? user.client : user.username) }}
+        {{ ordersHistory.render(user, orders) }}
+        {{ storedAddresses.render(user) }}
+        {{ storedCars.render(user) }}
+    </main>
+    {{ footer.render() }}
+{% endblock %}

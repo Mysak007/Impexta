@@ -1,0 +1,41 @@
+{% macro render() %}
+    <div class="FormPart">
+        <div class="FormPart-top">
+            <img src="{{ asset('build/svg/user-alt.svg') }}" alt="" width="32" height="32" />
+            <h2 class="FormPart-headline">Osobní údaje</h2>
+            <a href="#" rel="noopener noreferrer" class="FormPart-link">Přihlásit se do mého účtu</a>
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Jméno a příjmení</label>
+            <input type="text" name="name" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Email</label>
+            <input type="email" name="email" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Telefon</label>
+            <input type="tel" name="phone" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--select">
+            <label>Uložené adresy</label>
+            <select name="name" class="Form-input">
+                <option value="-">-</option>
+            </select>
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Ulice a číslo popisné</label>
+            <input type="text" name="address" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--row">
+            <div class="Form-inputWrapper">
+                <label>PSČ</label>
+                <input type="text" class="Form-input" required />
+            </div>
+            <div class="Form-inputWrapper">
+                <label>Město</label>
+                <input type="text" class="Form-input" required />
+            </div>
+        </div>
+    </div>
+{% endmacro %}

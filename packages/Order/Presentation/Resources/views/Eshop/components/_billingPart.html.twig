@@ -1,0 +1,20 @@
+{% macro render() %}
+    <div class="FormPart FormPart--hidden" id="billing">
+        <div class="FormPart-top">
+            <img src="{{ asset('build/svg/user-alt.svg') }}" alt="" width="32" height="32" />
+            <h2 class="FormPart-headline">Fakturační údaje</h2>
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Název firmy</label>
+            <input type="text" name="companyName" class="Form-input" />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>IČO</label>
+            <input type="text" name="ico" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>DIČ</label>
+            <input type="text" name="div" class="Form-input" required />
+        </div>
+    </div>
+{% endmacro %}

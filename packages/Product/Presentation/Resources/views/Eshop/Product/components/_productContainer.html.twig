@@ -1,0 +1,80 @@
+{% macro render(product) %}
+    <div class="ProductContainer">
+        <div class="ProductContainer-wrapper">
+            <div class="ProductContainer-top">
+                <span class="ProductContainer-textProductCode">Kód: {{ product.code }}</span>
+                <div class="ProductContainer-tagWrapper">
+                    {% if product.doesNeedsextraShipping %}
+                        <span class="ProductContainer-tag">
+                    Nadrozměrná doprava
+                </span>
+                    {% endif %}
+                    {% if product.isActionProduct %}
+                        <span class="ProductContainer-tag">
+                    AKCE!
+                </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="ProductContainer-content">
+                <div class="ProductContainer-imageWrapper">
+                    {% set image = product.getMainProductImage ?? product.getProductImagesWithoutMain.first %}
+                    {% if image %}
+                        <img class="ProductContainer-productImg"
+                             src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"
+                             alt="{{ product.name }}"/>
+                    {% else %}
+                        <img class="ProductContainer-productImg"
+                             src="https://via.placeholder.com/200x200?text=Impexta"
+                             alt="{{ product.name }}"/>
+                    {% endif %}
+                    <p class="ProductContainer-textProductMaker">{{ product.manufacturer }}</p>
+                </div>
+                <div class="ProductContainer-basicInfoWrapper">
+                    <h3 class="ProductContainer-textProductName">
+                        <a href="{{ path('product_eshop_product_detail', {'categorySlug': product.productCard.category.slug, 'productSlug': product.slug, 'productId': product.id}) }}"
+                           class="ProductContainer-link">{{ product.name }}</a>
+                    </h3>
+                    <p class="ProductContainer-textProductMaker">{{ product.manufacturer }}</p>
+                    <p class="ProductContainer-textProductDescription">{{ product.productCard.description|default('') }}</p>
+                    <div class="ProductContainer-productPricingInformation">
+                        <div class="ProductContainer-availability">
+                            {% if product.getWarehouseProducts|length > 0 %}
+                                <span class="Stock Stock--inStock">Skladem</span>
+                            {% endif %}
+                            <div class="PriceSwitch">
+                                {% set prices = calculate_price(product,app.user,app.session.get('currency')) %}
+                                <button class="Button Button--small Button--primary {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}" data-type="b2b">
+                                    B2B
+                                </button>
+                                <button
+                                    class="Button Button--small {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}"
+                                    data-type="b2c">
+                                    B2C
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ProductContainer-pricing">
+                            <ul class="ProductContainer-price {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2C') ? 'hidden' : '' }}"
+                                data-target="b2b">
+                                <li class="Price-main">{{ prices['withVat']|money }}</li>
+                                <li class="Price-secondary">{{ prices['withoutVat']|money }} bez DPH</li>
+                            </ul>
+                            <ul class="ProductContainer-price {{ prices['clientType'] == constant('Impexta\\Client\\Domain\\Enum\\ClientGroup::B2B') ? 'hidden' : '' }}"
+                                data-target="b2c">
+                                <li class="Price-main">{{ prices['B2CPrice']|money }}</li>
+                                <li class="Price-secondary">{{ prices['B2CPriceWithoutVat']|money }} bez DPH</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ProductContainer-bottom">
+                        <button type="submit" class="Button Button--icon Button--primary" data-id="{{ product.id }}">
+                            <img src="{{ asset('build/svg/cart.svg') }}" alt="Přidat do košíku"
+                                 class="ProductContainer-cartImg"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

@@ -1,0 +1,104 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+{% import '@order/Eshop/components/_paymentPart.html.twig' as paymentPart %}
+{% import '@order/Eshop/components/_shippingPart.html.twig' as shippingPart %}
+{% import '@order/Eshop/components/_personalInfoPart.html.twig' as personalInfoPart %}
+{% import '@order/Eshop/components/_checkBox.html.twig' as checkbox %}
+{% import '@order/Eshop/components/_radioButton.html.twig' as radioButton %}
+{% import '@order/Eshop/components/_billingPart.html.twig' as billingPart %}
+{% import '@order/Eshop/components/_differentShippingPart.html.twig' as differentShippingPart %}
+{% import '@order/Eshop/components/cartComponents/_cartWrapper.html.twig' as cartWrapper %}
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container Order">
+        <h1 class="Order-headline">Objednávka</h1>
+        <form class="Order-form" method="post">
+            <div class="Order-formPart">
+                {{ shippingPart.render() }}
+                {{ paymentPart.render() }}
+                {{ personalInfoPart.render() }}
+                <div class="Form-inputWrapper">
+                    {{ checkbox.render("billing", "Vyplnit fakturační údaje") }}
+                </div>
+                {{ billingPart.render() }}
+                <div class="Form-inputWrapper">
+                    {{ checkbox.render("differentShipping", "Doručit na jinou adresu") }}
+                </div>
+                {{ differentShippingPart.render() }}
+                <div class="Form-inputWrapper">
+                    <label>Přidat poznámku pro prodejce</label>
+                    <textarea class="Form-input" name="note" rows="5" cols="50" tabindex="5"></textarea>
+                </div>
+            </div>
+            <div class="Order-formPart">
+                <div class="FormPart">
+                    <div class="FormPart-top">
+                        <h2 class="FormPart-headline">Rekapitulace objednávky</h2>
+                    </div>
+                    <div class="FormPart-content">
+                        {{ cartWrapper.render(cartItems,totalPrice, true) }}
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Způsob dopravy</strong>
+                            <span class="Order-recapText--light">Kurýr</span>
+                        </div>
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Způsob platby</strong>
+                            <span class="Order-recapText--light">Online</span>
+                        </div>
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Doručovací adresa</strong>
+                            <span class="Order-recapText--light">Falešná ulice 125, Falešnof, 120 56</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="FormPart">
+                    <span class="Order-recapText">Celkem k úhradě:&nbsp;25000&nbsp;Kč</span>
+                    <span class="Order-recapText Order-recapText--small">Bez DPH:&nbsp;25000&nbsp;Kč</span>
+                    <div class="Form-inputWrapper">
+                        <label class="Form-checkbox">
+                            <input type="checkbox" name="consent" required />
+                            <span class="Form-checkboxControl"></span>
+                            <span class="Form-label">Souhlasím s obchodními podmínkami</span>
+                        </label>
+                    </div>
+                    <div class="Order-submitWrapper">
+                        <button type="submit" class="Button Button--primary">
+                            Závazně objednat
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="storesModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Vyberte pobočku</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body FormPart">
+                            <div class="Form-inputWrapper Form-inputWrapper--price">
+                                {{ radioButton.render('pickupPlace', "prague", "Praha") }}
+                            </div>
+                            <span class="Form-inputDescription">Chodovská 3, 141 00, Praha 4</span>
+                            <div class="Form-inputWrapper Form-inputWrapper--price">
+                                {{ radioButton.render('pickupPlace', "ostrava", "Ostrava") }}
+                            </div>
+                            <span class="Form-inputDescription">Rudná 3 / 1118, 703 00, Ostrava - Vítkovice</span>
+                            <div class="Form-inputWrapper Form-inputWrapper--price">
+                                {{ radioButton.render('pickupPlace', "zilina", "Žilina") }}
+                            </div>
+                            <span class="Form-inputDescription">Kragujevská 1 / 3628, 010 01, Žilina, SK</span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn Button" data-bs-dismiss="modal">Zavřít</button>
+                            <button type="button" class="btn Button Button--primary" data-bs-dismiss="modal">Vybrat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+    {{ footer.render() }}
+{% endblock %}

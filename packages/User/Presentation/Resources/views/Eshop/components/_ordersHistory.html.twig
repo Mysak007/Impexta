@@ -1,0 +1,21 @@
+{% macro render(user, orders) %}
+    {% import '@user/Eshop/components/_order.html.twig' as order %}
+    <section class="AccountSection">
+        <div class="AccountSection-top" data-expandable="true">
+            <h2 class="AccountSection-header">Historie objednávek</h2>
+            {% if orders %}
+                <object type="image/svg+xml" data="{{ asset('build/svg/caret-down.svg') }}">
+                    Zobrazit/skrýt
+                </object>
+            {% endif %}
+        </div>
+        <div>{{ user.client ?? 'Nemáte žádné objednávky.' }}</div>
+        {% if orders %}
+            <div class="AccountSection-content" data-expanded="false">
+                {% for order in orders %}
+                    {{ order.render(order) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+{% endmacro %}

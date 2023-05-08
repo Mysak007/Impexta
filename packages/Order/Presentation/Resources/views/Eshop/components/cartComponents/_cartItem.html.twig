@@ -1,0 +1,44 @@
+{% macro render(title, amount, stock, unitPrice, totalPrice, image, summary) %}
+    <div class="CartItem">
+        <div class="CartItem-imageWrapper {{ summary ? 'CartItem-imageWrapper--wide' : '' }}">
+            {% if image is not empty %}
+                <img src="{{ image }}" alt="{{ title }} image" />
+            {% else %}
+                <img src="https://via.placeholder.com/300x300?text=Impexta" alt="{{ title }} image" />
+            {% endif %}
+        </div>
+        <div class="CartItem-infoWrapper">
+            <div class="CartItem-top">
+                <span class="CartItem-title">{{ title }}</span>
+                {% if(summary == false) %}
+                    <span class="CartItem-removeIcon">
+                        <img src="{{ asset('build/svg/close.4d971c63.svg') }}" alt="Odebrat položku" />
+                    </span>
+                {% endif %}
+            </div>
+            <div class="CartItem-content">
+                <div class="CartItem-storage">
+                    <div class="CartItem-storageRow">
+                        <strong>Stav:&nbsp;</strong>
+                        <span class="Stock {{ stock ? 'Stock--inStock' : 'Stock--outOfStock' }}">
+                            {{ stock ? 'Skladem' : 'Není skladem' }}
+                        </span>
+                    </div>
+                </div>
+                {% if(summary == false) %}
+                    <div class="CartItem-summary">
+                        <div class="CartItem-amountWrapper">
+                            <button type="button" class="Button Button--icon Button--amount">-</button>
+                            <input class="CartItem-amount Form-input" disabled value="{{ amount }}" />
+                            <button type="button" class="Button Button--icon Button--amount">+</button>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="CartItem-prices">
+                <span>Cena za kus: {{ unitPrice|money }}</span>
+                <strong>Celkem: {{ totalPrice|money }}</strong>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

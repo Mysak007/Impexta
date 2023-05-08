@@ -1,0 +1,12 @@
+{% macro printRow(form) %}
+    <div class="box box-primary">
+        <div class="box-body box-profile">
+             {{ form_row(form.product, {'attr': {'data-controller': 'select2'}}) }}
+             {{ form_row(form.quantity) }}
+             {{ form_row(form.unitPrice) }}
+            <button type="button" class="btn btn-danger"
+                    data-action="click->form-collection#removeFormFromCollection">Odstranit
+            </button>
+        </div>
+    </div>
+{% endmacro %}

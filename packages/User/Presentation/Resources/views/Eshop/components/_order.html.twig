@@ -1,0 +1,14 @@
+{% macro render(order) %}
+    {% import '@user/Eshop/components/_orderItemUserAccount.html.twig' as orderItem %}
+    <div class="AccountOrder">
+        <div class="AccountOrder-top" data-expandable="true">
+            <span class="AccountOrder-title">#{{ order.id }}</span>
+            <img src="{{ asset('build/svg/caret-down.svg') }}" alt="Zobrazit/skrýt">
+        </div>
+        <div class="AccountOrder-content" data-expanded="false">
+            {% for orderItem in order.orderItems %}
+                {{ orderItem.render(orderItem) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}

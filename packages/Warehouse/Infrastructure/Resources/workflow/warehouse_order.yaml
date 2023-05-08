@@ -1,0 +1,33 @@
+framework:
+    workflows:
+        warehouse_order:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Impexta\Warehouse\Domain\Entity\WarehouseOrder
+            initial_marking: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CREATED
+            places:
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CREATED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::ORDERED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CANCELLED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::RECEIVED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_RECEIVED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_CANCELLED
+            transitions:
+                !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderStateTransition::ORDER: 
+                    from: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CREATED
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::ORDERED
+                !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderStateTransition::CANCEL:
+                    from: [ !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CREATED, !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::ORDERED ]
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::CANCELLED
+                !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderStateTransition::RECEIVE:
+                    from: [ !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::ORDERED, !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_RECEIVED ]
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::RECEIVED
+                !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderStateTransition::PARTIALLY_RECEIVE:
+                    from: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::ORDERED
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_RECEIVED
+                !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderStateTransition::PARTIALLY_CANCEL: 
+                    from: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_RECEIVED
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderState::PARTIALLY_CANCELLED

@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        warehouse_order_item:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            supports:
+                - Impexta\Warehouse\Domain\Entity\WarehouseOrderItem
+            initial_marking: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CREATED
+            places: 
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CREATED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::ORDERED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CANCELLED
+                - !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::RECEIVED
+            transitions:
+                order:
+                    from: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CREATED
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::ORDERED
+                cancel:
+                    from: [!php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CREATED, !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::ORDERED]
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::CANCELLED
+                receive:
+                    from: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::ORDERED
+                    to: !php/const Impexta\Warehouse\Domain\Enum\WarehouseOrderItemState::RECEIVED

@@ -1,0 +1,182 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig' as label %}
+
+{% block back_path %}
+    {{ path('product_crm_product_list') }}
+{% endblock %}
+{% block custom_page_title %}{{ product.name }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% set allow_edit = is_granted(constant('Impexta\\Product\\Infrastructure\\Security\\ProductCrudVoter::EDIT'), product) %}
+{% block edit_path %}
+    {{ path('product_crm_product_edit', {'id': product.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Kód</b> <span class="pull-right">{{ product.code }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Název</b> <span class="pull-right">{{ product.name }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Slug</b> <span class="pull-right">{{ product.slug }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Výrobce</b> <span class="pull-right">{{ product.manufacturer }}</span>
+                            <br>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Váha</b> <span class="pull-right">{{ product.weight }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Minimální počet na skladu</b> <span class="pull-right">{{ product.leastInStock }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Potřebuje zvláštní dopravu?</b> <span
+                                class="pull-right">{{ label.render(product.doesNeedsExtraShipping) }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Zobrazit na eshopu?</b> <span
+                                class="pull-right">{{ label.render(product.showOnEshop) }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Počet kusů na všech skladech</b> <span
+                                class="pull-right">{{ warehouseProductCount }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Produktová karta</b> <span class="pull-right">{{ product.productCard.name }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>DPH</b> <span class="pull-right">{{ product.productCard.vatRate.readable }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Záruka</b> <span class="pull-right">{{ product.productCard.guarantee.readable }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Kategorie</b> <span class="pull-right">{{ product.productCard.category.name }}</span>
+                        </li>
+                        <li class="list-group-item" style="border-bottom: 0;">
+                            <b></b> <span class="pull-right"><a
+                                    href="{{ path('product_crm_product_card_detail',{'id': product.productCard.id }) }}"
+                                    class="btn btn-primary btn-sm"
+                                    style="margin-top: 5px;margin-bottom: 5px;">Detail</a></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {% if product.images is not empty %}
+                <div class="box box-primary">
+                    <div class="box-header"><span style="font-weight: bold">Obrázky</span></div>
+                    <div class="box-body box-profile">
+                        {% if product.getMainProductImage %}
+                            <img class="img-bordered"
+                                 src="{{ vich_uploader_asset(product.getMainProductImage) | imagine_filter('product_crm_detail_thumbnail') }}">
+                            {% for image in product.getProductImagesWithoutMain %}
+                                <img class="img-bordered"
+                                     src="{{ vich_uploader_asset(image) | imagine_filter('product_crm_detail_thumbnail') }}"/>
+                            {% endfor %}
+                        {% else %}
+                            {% for image in product.getProductImagesWithoutMain %}
+                                <img class="img-bordered"
+                                     src="{{ vich_uploader_asset(image) | imagine_filter('product_crm_detail_thumbnail') }}"/>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="box-title">Ceny</h3>
+                    <a href="{{ path('product_crm_product_price_create',{'id': product.id}) }}"
+                       style="margin-bottom:5px; margin-right: 5px"
+                       class="btn btn-primary btn-sm pull-right">Přidat cenu</a>
+                </div>
+                <div class="box-body no-padding">
+                    <table width="100%" class="text-center table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>Měna</th>
+                            <th>Skupina</th>
+                            <th>Cena</th>
+                            <th>Akce</th>
+                        </tr>
+                        {% for productPrice in productPrices %}
+                            <tr>
+                                <td>{{ productPrice.price.currency.code }}</td>
+                                <td>{% if productPrice.clientGroup %}{{ productPrice.clientGroup.readable }}{% else %}---{% endif %}</td>
+                                <td>{{ productPrice.price|money }}</td>
+                                <td>
+                                    <a href="{{ path('product_crm_product_price_edit', {'id': product.id, 'priceId': productPrice.id}) }}"
+                                       style="padding-right: 10px;">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                    <a href="{{ path('product_crm_product_price_delete', {'id': productPrice.id}) }}"
+                                       onclick="return confirm('Opravdu chcete odstranit tuto cenu?');">
+                                        <i class="far fa-trash-alt text-red"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header"><h3 class="box-title">Objednávky na sklad</h3></div>
+                <div class="box-body no-padding">
+                    <table width="100%" class="text-center table table-striped">
+                        <tbody>
+                        <tr>
+                            <th>ID</th>
+                            <th>Množství</th>
+                            <th>Dodavatel</th>
+                            <th>Vytvořeno</th>
+                            <th>Vytvořil</th>
+                            <th>Stav</th>
+                            <th>Akce</th>
+                        </tr>
+                        {% for order in warehouseOrders %}
+                            <tr>
+                                <td>{{ order.warehouseOrder.id }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td>{{ order.supplier }}</td>
+                                <td>{{ order.createdAt|date('d.m.Y') }}</td>
+                                <td>{{ order.warehouseOrder.creator.username|default('-----') }}</td>
+                                <td>{{ order.state.readable }}</td>
+                                <td>
+                                    <a href="{{ path('warehouse_crm_warehouse_order_detail',{'id': order.warehouseOrder.id }) }}"
+                                       class="btn btn-primary btn-sm"
+                                       style="margin-top: 5px;margin-bottom: 5px;">Detail</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

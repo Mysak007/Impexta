@@ -1,0 +1,47 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}Seznam poboček{% endblock %}
+{% block custom_page_title %}Seznam poboček{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Seznam poboček</h3>
+                    {{ add_button.render(path('store_crm_store_create')) }}
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th width="80%">Název</th>
+                            <th width="20%">Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for store in stores %}
+                            <tr>
+                                <td>{{ store.name }}</td>
+                                <td>
+                                    <a href="{{ path('store_crm_store_update',{'id':store.id}) }}"
+                                       class="btn btn-sm btn-primary">Upravit</a>
+                                    <a href="{{ path('store_crm_store_special_opening_hours_list',{'id':store.id}) }}"
+                                       class="btn btn-sm btn-success">Svátky</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

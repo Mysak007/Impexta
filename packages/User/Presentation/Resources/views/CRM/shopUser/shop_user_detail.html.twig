@@ -1,0 +1,57 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+
+{% block custom_page_title %}{{ shopUser.email }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('user_crm_shop_user_list') }}{% endblock %}
+
+{% set allow_edit = true %}
+{% block edit_path %}
+    {{ path('user_crm_shop_user_edit', {'id': shopUser.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 1rem;">
+                    {% if shopUser.client %}
+                        <a href="{{ path('client_crm_client_detail',{'id':shopUser.client.id}) }}"
+                           class="btn btn-primary mt-2">Zobrazit klienta</a>
+                    {% else %}
+                        <a href="{{ path('client_crm_client_create') }}"
+                           class="btn btn-primary mt-2">Vytvořit klienta</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>ID</b> <span class="pull-right">{{ shopUser.id }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>E-mail</b> <span class="pull-right">{{ shopUser.email }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Aktivní</b> <span class="pull-right">{{ label.render(shopUser.enabled) }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Klient</b> <span class="pull-right">{{ shopUser.client|default('---') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Účet vytvořen</b> <span class="pull-right">{{ shopUser.createdAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poslední úprava</b> <span
+                                class="pull-right">{{ shopUser.updatedAt|date('Y-m-d') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

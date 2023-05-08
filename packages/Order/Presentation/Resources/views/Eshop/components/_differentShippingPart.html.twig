@@ -1,0 +1,36 @@
+{% macro render() %}
+    <div class="FormPart FormPart--hidden" id="differentShipping">
+        <div class="FormPart-top">
+            <img src="{{ asset('build/svg/user-alt.svg') }}" alt="" width="32" height="32" />
+            <h2 class="FormPart-headline">Doručovací adresa</h2>
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Jméno a příjmení</label>
+            <input type="text" name="differentName" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Název firmy</label>
+            <input type="text" name="differentCompanyName" class="Form-input" />
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Uložené adresy</label>
+            <select name="name" class="Form-input">
+                <option value="-">-</option>
+            </select>
+        </div>
+        <div class="Form-inputWrapper">
+            <label>Ulice a číslo popisné</label>
+            <input type="text" name="address" class="Form-input" required />
+        </div>
+        <div class="Form-inputWrapper Form-inputWrapper--row">
+            <div class="Form-inputWrapper">
+                <label>PSČ</label>
+                <input type="text" class="Form-input" required />
+            </div>
+            <div class="Form-inputWrapper">
+                <label>Město</label>
+                <input type="text" class="Form-input" required />
+            </div>
+        </div>
+    </div>
+{% endmacro %}

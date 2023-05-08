@@ -1,0 +1,45 @@
+{%- apply spaceless -%}
+<?xml version="1.0" encoding="utf-8"?>
+<SHOP>
+    {%- for product in products -%}
+        {%- if product.hasPriceInCurrency(currency) -%}
+            <SHOPITEM>
+                <ITEM_ID>{{- product.id -}}</ITEM_ID>
+                <PRODUCTNAME>{{- product.name -}}</PRODUCTNAME>
+                <PRODUCT>{{- product.name -}}</PRODUCT>
+                <DESCRIPTION>{{- product.description -}}</DESCRIPTION>
+                <URL>{{- absolute_url(path('product_eshop_product_detail',{'productSlug':product.slug,'productId': product.id})) -}}</URL>
+                {%- if product.mainImage is not empty -%}
+                    <IMGURL>{{- vich_uploader_asset(product.mainImage) | imagine_filter('product_image_thumbnail') -}}
+                    </IMGURL>
+                {%- endif -%}
+                {%- for image in product.images -%}
+                    <IMGURL_ALTERNATIVE>{{- vich_uploader_asset(product.image) | imagine_filter('product_image_thumbnail') -}}</IMGURL_ALTERNATIVE>
+                {%- endfor -%}
+                <PRICE_VAT>{{- product.getPriceInCurrency(currency)|money('cs_CZ',2, false, false) -}}</PRICE_VAT>
+                <MANUFACTURER>{{- product.manufacturer -}}</MANUFACTURER>
+                <CATEGORYTEXT>{{- product.category.getParents|join(' | ') -}}</CATEGORYTEXT>
+                {%- if product.deliveryDate != null -%}
+                    <DELIVERY_DATE>{{- date(product.deliveryDate).diff(date('NOW')).days -}}</DELIVERY_DATE>{%- endif -%}
+                {%- for shipping in product.shippings -%}
+                    {%- if shipping.hasPriceInCurrency(currency) -%}
+                        <DELIVERY>
+                            <DELIVERY_ID>
+                                {%- if shipping.shippingMethod.value == constant('Impexta\\Shipping\\Domain\\Enum\\ShippingMethod::PICK_UP') -%}VLASTNI_PREPRAVA
+                                {%- elseif shipping.shippingMethod.value == constant('Impexta\\Shipping\\Domain\\Enum\\ShippingMethod::DELIVERY') -%}DPD
+                                {%- elseif shipping.shippingMethod.value == constant('Impexta\\Shipping\\Domain\\Enum\\ShippingMethod::DELIVERY_EXPRESS') -%}DPD
+                                {%- endif -%}
+                            </DELIVERY_ID>
+                            <DELIVERY_PRICE>{{- shipping.price|money('cs_CZ',2, false, false) -}}</DELIVERY_PRICE>
+                            {%- if not shipping.shippingMethod.value == constant('Impexta\\Shipping\\Domain\\Enum\\ShippingMethod::PICK_UP') -%}
+                                <DELIVERY_PRICE_COD>{{- shipping.getPriceWithCashOnDeliveryFee -}}</DELIVERY_PRICE_COD>
+                            {%- endif -%}
+                        </DELIVERY>
+                    {%- endif -%}
+                {%- endfor -%}
+                <ITEMGROUP_ID>{{- product.productCardId -}}</ITEMGROUP_ID>
+            </SHOPITEM>
+        {%- endif -%}
+    {%- endfor -%}
+</SHOP>
+{%- endapply -%}

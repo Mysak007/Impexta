@@ -1,0 +1,15 @@
+{% macro printRow(form) %}
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                {{ form_row(form.car, {'attr': {'data-controller': 'select2'}}) }}
+                {{ form_row(form.licensePlate) }}
+                {{ form_row(form.vin) }}
+                {{ form_row(form.technicalInspectionExpiresAt, {'attr': {'data-controller': 'date-picker'}}) }}
+                {{ form_row(form.ownerName) }}
+                <button type="button" class="btn btn-danger"
+                        data-action="click->form-collection#removeFormFromCollection">
+                    Odstranit
+                </button>
+            </div>
+        </div>
+{% endmacro %}

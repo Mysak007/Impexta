@@ -1,0 +1,58 @@
+<html>
+<body>
+<h1>Výdejka {{ issueId }}</h1>
+<table width="100%">
+    <tr>
+        <td>Číslo dokladu:</td>
+        <td>{{ issueId }}</td>
+        <td>Datum vystavení:</td>
+        <td>{{ warehouseIssue.date|date('d-m-Y') }}</td>
+    </tr>
+    <tr>
+        <td>Vystavil:</td>
+        <td>{{ warehouseIssue.createdBy }}</td>
+    </tr>
+    <tr>
+        <td>Sklad:</td>
+        <td>{{ warehouseIssue.warehouse.readable }}</td>
+    </tr>
+    <tr>
+        <td>Kód:</td>
+        <td>{{ warehouseIssue.internalCode }}</td>
+    </tr>
+    {% if warehouseIssue.note is not null %}
+        <tr>
+            <td>Poznámka:</td>
+            <td>{{ warehouseIssue.note }}</td>
+        </tr>
+    {% endif %}
+</table>
+
+<table width="100%">
+    <thead>
+    <tr>
+        <th>Produkt/Varianta</th>
+        <th>Název</th>
+        <th>Sklad</th>
+        <th>Cena</th>
+    </tr>
+    </thead>
+    {% for warehouseProduct in warehouseIssue.warehouseProducts %}
+        <tr>
+            <td>
+                {{ warehouseProduct.product.code }}
+            </td>
+            <td>
+                {{ warehouseProduct.product.name }}
+            </td>
+            <td>
+                {{ warehouseProduct.warehouse.readable }}
+            </td>
+            <td>
+                {{ warehouseProduct.purchasePrice|money }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Vytvořit zasílací adresu{% endblock %}
+{% block custom_page_title %}Vytvořit zasílací adresu{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('client_crm_client_detail',{'id':client.id}) }}{% endblock %}
+
+{% block page_javascripts %}
+    <script type="text/javascript" src="https://secure.smartform.cz/api/v1/smartform.js" async></script>
+
+    <script type="text/javascript">
+        {# This must be here – it does not work when processed by Webpack #}
+        var smartform = smartform || {};
+
+        smartform.beforeInit = () => {
+            smartform.setClientId('{{ SMARTFORM_CLIENT_ID }}');
+        };
+
+        smartform.afterInit = () => {
+            smartform.getInstance('smartform-instance-shippingAddress').setCountry('{{ country_code }}');
+        };
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        {{ smartform_init() }}
+        {{ form_start(form) }}
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Zasílací adresa</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        {{ form_row(form.address) }}
+                        {% if form.address.vars.errors.count %}
+                            <small class="form-text text-danger">
+                                Adresa není platná - musíte vybrat adresu z nabídky.
+                            </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block back_path %}
+    {% if order.state == 'CANCELLED' or order.state == 'RECEIVED' %}
+        {{ path('warehouse_crm_warehouse_order_archive_list') }}
+    {% else %}
+        {{ path('warehouse_crm_warehouse_order_list') }}
+    {% endif %}
+{% endblock %}
+{% block custom_page_title %}{{ 'Objednávka č.' ~ order.id }} {% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% set allow_edit = is_granted(constant('Impexta\\Warehouse\\Infrastructure\\Security\\WarehouseOrderVoter::UPDATE'), order) %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Sklad</b> <span class="pull-right">{{ order.warehouse }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Stav</b> <span class="pull-right">{{ order.stateReadable }}</span>
+                            <br>
+                            {% for transition in workflow_transitions(order) %}
+                                <a class="" href="{{ path('warehouse_crm_warehouse_order_update_state', {'id': order.id, 'transition': transition.name}) }}">
+                                    <button type="button" class="btn btn-xs btn-primary">{{ transition.name|trans({}, 'warehouse_order_state_transitions') }}</button>
+                                </a>
+                            {% endfor %}
+                        </li>
+                        <li class="list-group-item">
+                            <b>Vytvořil</b> <span
+                                class="pull-right">{{ order.creator.username|default('-----') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Objednávka vytvořena</b> <span
+                                class="pull-right">{{ order.createdAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poslední úprava</b> <span class="pull-right">{{ order.updatedAt|date('Y-m-d') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            {% for item in order.orderItems %}
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+                        <li class="list-group-item">
+                            <div>Název<span class="pull-right">{{ item.product.name }}</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Množství<span class="pull-right">{{ item.quantity }}</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Dodavatel<span class="pull-right">{{ item.supplier }}</span></div>
+                        </li>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

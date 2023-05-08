@@ -1,0 +1,40 @@
+{% macro render(user) %}
+    {% set client = user.client ?? client %}
+    <section class="AccountSection">
+        <div class="AccountSection-top">
+            <h2 class="AccountSection-header">Adresy</h2>
+            <button class="Button Button--primary Button--small">
+                Přidat adresu
+            </button>
+        </div>
+        <div class="AccountSection-content AccountSection-content--row">
+            <div>{{ user.client ?? 'Nemáte žádné adresy.' }}</div>
+            {% if user.client %}
+                <div class="AccountSection-item">
+                <header class="AccountSection-itemHeader">
+                    <h3>{{ client.billingAddress.address.name }}</h3>
+                    <img src="{{ asset('build/svg/ellipsis.svg') }}" alt="Editovat" width="16" height="16"/>
+                </header>
+                <main class="AccountSection-itemContent">
+                    <span>{{ client.billingAddress.address.street ~ ' ' ~ client.billingAddress.address.houseNumber }}</span>
+                    <span>{{ client.billingAddress.address.city }}</span>
+                    <span>{{ client.billingAddress.address.zipCode ~ ', ' ~ client.billingAddress.address.region }}</span>
+                </main>
+            </div>
+            {% endif %}
+            {% if user.client and client.defaultShippingAddress %}
+                <div class="AccountSection-item">
+                    <header class="AccountSection-itemHeader">
+                        <h3>{{ client.defaultShippingAddress.address.name }}</h3>
+                        <img src="{{ asset('build/svg/ellipsis.svg') }}" alt="Editovat" width="16" height="16"/>
+                    </header>
+                    <main class="AccountSection-itemContent">
+                        <span>{{ client.defaultShippingAddress.address.street ~ ' ' ~ client.defaultShippingAddress.address.houseNumber }}</span>
+                        <span>{{ client.defaultShippingAddress.address.city }}</span>
+                        <span>{{ client.defaultShippingAddress.address.zipCode ~ ', ' ~ client.defaultShippingAddress.address.region }}</span>
+                    </main>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endmacro %}

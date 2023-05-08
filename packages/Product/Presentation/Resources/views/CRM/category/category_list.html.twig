@@ -1,0 +1,57 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}Seznam kategorií produktů{% endblock %}
+{% block custom_page_title %}Seznam kategorií produktů{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Seznam kategorií produktů</h3>
+        </div>
+        <div class="box-body">
+            <div class="row col-md-12">
+                <table class="table table-bordered table-striped" data-controller="data-table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Název</th>
+                        <th>Podkategorie</th>
+                        <th>URL</th>
+                        <th>Akce</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category in categories %}
+                        <tr role="row" class="odd">
+                            <td>{{ category.categoryName.position }}
+                                <div class="pull-right">
+                                    <a href="{{ path('product_crm_category_sort_up',{'id':category.categoryName.id}) }}">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </a>
+                                    <a href="{{ path('product_crm_category_sort_down',{'id':category.categoryName.id}) }}">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </a>
+                                </div>
+                            </td>
+                            <td>{{ category.categoryName.name }}</td>
+                            <td>{{ category.childrenCount }}</td>
+                            <td>{{ category.categoryName.slug }}</td>
+                            <td>
+                                <a href="{{ path('product_crm_category_edit', {'id':category.categoryName.id}) }}"
+                                   class="btn btn-primary btn-sm">Upravit</a>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {{ add_button.render(path('product_crm_category_create')) }}
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@client/CRM/client_compatible_car_macro.html.twig' as compatible_car_macro %}
+{% import '@MicroshopSymfonySurvivalKit/components/date_picker.html.twig' as date_picker %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/select2.html.twig' as select2 %}
+
+
+{% block custom_title %}Upravit klienta{% endblock %}
+{% block custom_page_title %}Upravit klienta{% endblock %}
+{% block custom_page_subtitle %}{{ client.personalDetails.firstName ~ ' ' ~  client.personalDetails.lastName }}{% endblock %}
+
+
+{% block page_stylesheets %}
+    {{ date_picker.init_stylesheets() }}
+{% endblock %}
+
+{% block page_javascripts %}
+    {{ encore_entry_script_tags('crm/client/form-ares') }}
+    {{ encore_entry_script_tags('crm/client/form-country') }}
+
+    <script type="text/javascript" src="https://secure.smartform.cz/api/v1/smartform.js" async></script>
+
+    {{ date_picker.init_javascript() }}
+
+    <script type="text/javascript">
+        {# This must be here – it does not work when processed by Webpack #}
+        var smartform = smartform || {};
+
+        smartform.beforeInit = () => {
+            smartform.setClientId('{{ SMARTFORM_CLIENT_ID }}');
+        }
+
+        const country = document.getElementById("client__country");
+
+        country.addEventListener("change", (event) => {
+            const select = event.currentTarget;
+            const countryCode = select.options[select.selectedIndex].dataset.code;
+
+            const instanceIds = smartform.getInstanceIds();
+            instanceIds.forEach(function (instanceId) {
+                smartform.getInstance(instanceId).setCountry(countryCode);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block back_path %}{{ path('client_crm_client_detail', {'id':client.id}) }}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+    {{ smartform_init(smartform_instances) }}
+    {{ form_start(form,{'attr': {'data-controller': 'form-collection client', 'data-action': 'client#validateAddress'}}) }}
+    <div class="col-md-8">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Osobní údaje</h3>
+            </div>
+            <div class="box-body box-profile">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            {{ form_row(form.country) }}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10">
+                                {{ form_row(form.personalDetails.taxId) }}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-success pull-right aresButton"
+                                        style="margin-top:25px;width:100%;">Načíst z ARES
+                                </button>
+                                <span class="aresError"
+                                      style="display:none;color:red;">Nepovedlo se načíst data z ARES</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.personalDetails) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.clientGroup) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.currency) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.logo) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.sale) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </div>
+        <div data-form-collection-target="prototypeDiv"
+             data-prototype="{{ compatible_car_macro.printRow(form.clientCars.vars.prototype)|e('html_attr') }}"
+             data-count="{{ form.clientCars | length }}">
+            {% for car in form.clientCars %}
+                {{ compatible_car_macro.printRow(car) }}
+            {% endfor %}
+        </div>
+        <button
+            type="button"
+            class="add-row btn btn-primary"
+            data-action="click->form-collection#addFormToCollection">
+            Přidat vozidlo klienta
+        </button>
+        <button type="submit" class="btn btn-success pull-right">
+            Uložit
+        </button>
+    </div>
+    <div class="col-md-4">
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Kontaktní údaje</h3>
+        </div>
+        <div class="box-body box-profile">
+            <div class="form-group">
+                {{ form_row(form.contactDetails) }}
+            </div>
+        </div>
+    </div>
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Bankovní údaje</h3>
+        </div>
+        <div class="box-body box-profile">
+            <div class="form-group">
+                {{ form_row(form.bankAccount) }}
+            </div>
+        </div>
+    </div>
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Fakturační adresa</h3>
+        </div>
+        <div class="box-body box-profile">
+            <div class="form-group">
+                {{ form_row(form.billingAddress) }}
+                {% if form.billingAddress.address.vars.errors.count %}
+                    <small class="form-text text-danger">
+                        Adresa není platná - musíte vybrat adresu z nabídky.
+                    </small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="box box-primary">
+        <div class="box-header with-border">
+            <h3 class="box-title">Zasílací adresa</h3>
+        </div>
+        <div class="box-body box-profile">
+            <div class="form-group">
+                {{ form_row(form.shippingAddress) }}
+                {% if form.shippingAddress.address.vars.errors.count %}
+                    <small class="form-text text-danger">
+                        Adresa není platna - musíte vybrat adresu
+                    </small>
+                {% endif %}
+            </div>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+    {% endblock %}

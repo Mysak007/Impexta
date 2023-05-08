@@ -1,0 +1,32 @@
+<nav class="Pagination">
+    <ul class="Pagination-path">
+        {% if previous is defined %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}" class="Pagination-arrow">
+                    <img src="{{ asset('build/svg/ios-arrow-back.svg') }}" alt="Arrow back."/>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <li>
+                    <a href="{{ path(route, query|merge({(pageParameterName): page})) }}"
+                       class="Pagination-number">{{ page }}</a>
+                </li>
+            {% else %}
+                <li>
+                    <span class="current">{{ page }}</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <li>
+                <a href="{{ path(route, query|merge({(pageParameterName): next})) }}" class="Pagination-arrow">
+                    <img src="{{ asset('build/svg/ios-arrow-forward.svg') }}" alt="Arrow forward."/>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

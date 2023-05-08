@@ -1,0 +1,62 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block back_path %}
+        {{ path('warehouse_crm_warehouse_issue_list',{'warehouse':warehouseIssue.warehouse.value}) }}
+{% endblock %}
+{% block custom_page_title %}Detail výdejky {{ warehouseIssue.id }} {% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12" style="margin-bottom: 1rem;">
+            <a href="{{ path('inquiry_crm_warehouse_issue_generate_pdf',{'id':warehouseIssue.id}) }}" class="btn btn-primary mt-2">Tisk</a>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>Sklad</b> <span class="pull-right">{{ warehouseIssue.warehouse }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Číslo dokumentu</b> <span
+                                class="pull-right">{{ warehouseIssue.documentId }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Vytvořil</b> <span
+                                class="pull-right">{{ warehouseIssue.createdBy }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Kód</b> <span
+                                class="pull-right">{{ warehouseIssue.internalCode }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Vytvořena</b> <span
+                                class="pull-right"> {{ warehouseIssue.date|date('d.m.Y') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poznámka</b> <span class="pull-right"> {{ warehouseIssue.note|default('---') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            {% for warehouseProduct in warehouseIssue.warehouseProducts %}
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+                        <li class="list-group-item">
+                            <div>Název<span class="pull-right">{{ warehouseProduct.product.name }}</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Sklad<span class="pull-right">{{ warehouseProduct.warehouse.readable }}</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Cena<span class="pull-right">{{ warehouseProduct.purchasePrice|money }}</span></div>
+                        </li>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

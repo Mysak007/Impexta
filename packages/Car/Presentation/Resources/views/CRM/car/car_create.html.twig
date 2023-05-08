@@ -1,0 +1,45 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Vytvořit vozidlo{% endblock %}
+{% block custom_page_title %}Vytvořit vozidlo{% endblock %}
+{% block custom_page_subtitle %}Vytvořit vozidlo{% endblock %}
+
+{% block back_path %}{{ path('car_crm_car_list') }}{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary table-box">
+        <div class="box-header">
+            <h3 class="box-title">Vytvořit vozidlo
+            </h3>
+        </div>
+        <div class="box-body">
+            {{ form_start(form, {'attr': {'data-controller': 'car-form'}}) }}
+            {{ form_row(form.manufacturer,{
+                'attr': {
+                    'data-car-form-target': 'carManufacturerSelect',
+                    'data-action': 'car-manufacturer-item@window->car-form#loadCarModels change->car-form#loadCarModels',
+                    'data-controller': 'select2'
+                }
+            }) }}
+            {{ form_row(form.category) }}
+            {{ form_row(form.model, {
+                'attr': {
+                    'list': 'models',
+                    'autocomplete': 'off'
+                }
+            }) }}
+
+            <datalist id="models"  data-car-form-target="modelsDatalist">
+            </datalist>
+
+            {{ form_row(form.yearOfManufacture) }}
+            {{ form_row(form.engineCapacity) }}
+            {{ form_row(form.note) }}
+            {{ form_row(form.hideOnEshop) }}
+
+            <button type="submit" class="btn btn-success pull-right">Vytvořit</button>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

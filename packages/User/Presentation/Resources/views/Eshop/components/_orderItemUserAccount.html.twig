@@ -1,0 +1,35 @@
+{% macro render(orderItem) %}
+    <div class="CartItem">
+        <div class="CartItem-imageWrapper">
+            {% if orderItem.product.images is not empty %}
+                {% set image = orderItem.product.getMainProductImage ?? orderItem.product.getProductImagesWithoutMain.first %}
+                <img
+                    src="{{ vich_uploader_asset(image) | imagine_filter('product_image_thumbnail') }}"
+                    alt="{{ orderItem.product.name }} image"/>
+            {% else %}
+                <img src="https://via.placeholder.com/300x300?text=Impexta" alt="{{ orderItem.product.name }} image"/>
+            {% endif %}
+        </div>
+        <div class="CartItem-infoWrapper">
+            <div class="CartItem-top">
+                <span class="CartItem-title">{{ orderItem.product.name }}</span>
+                <span class="CartItem-amount">{{ orderItem.quantity }}&nbsp;ks</span>
+            </div>
+            <div class="CartItem-content">
+                <div class="CartItem-storage">
+                    <div class="CartItem-storageRow">
+                        <strong>Stav:&nbsp;</strong>
+                        <span class="Stock {{ orderItem.warehouseProducts ? 'Stock--inStock' : 'Stock--outOfStock' }}">
+                            {{ orderItem.warehouseProducts ? 'Skladem' : 'Není skladem' }}
+                        </span>
+                    </div>
+                </div>
+                <div class="CartItem-prices">
+                    <span>Cena za kus: {{ orderItem.unitPrice|money }}</span>
+                    {% set totalPrice = orderItem.unitPrice.multiply(orderItem.quantity) %}
+                    <strong>Celkem: {{ totalPrice|money }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

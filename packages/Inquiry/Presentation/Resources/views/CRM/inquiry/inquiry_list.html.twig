@@ -1,0 +1,56 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}Seznam poptávek{% endblock %}
+{% block custom_page_title %}Seznam poptávek{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Přidat poptávku</h3>
+                    {{ add_button.render(path('inquiry_crm_inquiry_create')) }}
+                </div>
+                <div class="box-body">
+                    <table id="clients_table" class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Přiřazeno</th>
+                            <th>Původ</th>
+                            <th>Obdrženo</th>
+                            <th>Expirace</th>
+                            <th>Klient</th>
+                            <th>Sleva</th>
+                            <th>Poznámka</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for inquiry in inquiries %}
+                            <tr>
+                                <td>{{ inquiry.assignee }}</td>
+                                <td>{{ inquiry.origin.value }}</td>
+                                <td>{{ inquiry.receivedAt|date('d-m-Y') }}</td>
+                                <td>{{ inquiry.expiration|date('d-m-Y') }}</td>
+                                <td>{{ inquiry.client.personalDetails.lastname }} {{ inquiry.client.personalDetails.firstname }}</td>
+                                <td>{{ inquiry.sale }}</td>
+                                <td>{{ inquiry.note }}</td>
+                                <td><a href="{{ path('inquiry_crm_inquiry_detail',{'id':inquiry.id}) }}"
+                                       class="btn btn-primary btn-sm">Detail</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

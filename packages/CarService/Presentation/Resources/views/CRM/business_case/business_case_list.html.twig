@@ -1,0 +1,54 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam servisních požadavků{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    {{ add_button.render(path('car_service_crm_car_service_create')) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Servisní požadavky
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Klient</th>
+                            <th>Vozidlo</th>
+                            <th>Stav</th>
+                            <th>Předpokládaná cena</th>
+                            <th>Finální cena</th>
+                            <th>Předání</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for case in business_cases %}
+                            <tr>
+                                <td>{{ case.id }}</td>
+                                <td>{{ case.client.personalDetails.getName }}</td>
+                                <td>{{ case.vehicle.clientCar.car.__toString }}</td>
+                                <td>{{ case.state.readable }}</td>
+                                <td>{{ case.priceEstimate|money }}</td>
+                                <td>{{ case.finalPrice|money }}</td>
+                                <td>{{ case.handOverAt|date('d-m-Y') }}</td>
+                                <td><a href="{{ path('car_service_crm_car_service_detail',{'id':case.id}) }}" class="btn btn-primary btn-sm">Detail</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

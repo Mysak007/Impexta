@@ -1,0 +1,63 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Product\Domain\Entity\Product" table="product">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="productCard" target-entity="Impexta\Product\Domain\Entity\ProductCard" inversed-by="products">
+            <join-column name="product_card_id" nullable="false"/>
+        </many-to-one>
+
+        <one-to-many field="images" target-entity="Impexta\Product\Domain\Entity\ProductImage" mapped-by="product">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="prices" target-entity="Impexta\Product\Domain\Entity\ProductPrice" mapped-by="product" fetch="EAGER">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <one-to-many field="warehouseProducts" target-entity="Impexta\Warehouse\Domain\Entity\WarehouseProduct" mapped-by="product">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <field name="code" type="string"/>
+
+        <field name="name" type="string"/>
+
+        <field name="slug" type="string"/>
+
+        <field name="manufacturer" type="string"/>
+
+        <field name="weight" type="float"/>
+
+        <field name="showOnEshop" type="boolean"/>
+
+        <field name="leastInStock" type="integer" nullable="true"/>
+
+        <field name="needsExtraShipping" type="boolean"/>
+
+        <field name="createdAt" type="datetime_immutable"/>
+
+        <field name="updatedAt" type="datetime_immutable"/>
+
+        <field name="actionProduct" type="boolean"/>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

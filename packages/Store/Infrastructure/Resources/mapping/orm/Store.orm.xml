@@ -1,0 +1,50 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="Impexta\Store\Domain\Entity\Store" table="store">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="name" type="string"/>
+
+        <one-to-one field="address" target-entity="Impexta\Store\Domain\Entity\StoreAddress">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="store_address_id" nullable="false"/>
+        </one-to-one>
+
+        <one-to-one field="contactInformation" target-entity="Impexta\Store\Domain\Entity\StoreContactInformation">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="store_contact_information_id" nullable="false"/>
+        </one-to-one>
+
+        <one-to-many field="openingHours" target-entity="Impexta\Store\Domain\Entity\StoreOpeningHours" mapped-by="store" >
+        <cascade>
+            <cascade-persist/>
+            <cascade-remove/>
+        </cascade>
+        </one-to-many>
+
+        <one-to-many field="specialOpeningHours" target-entity="Impexta\Store\Domain\Entity\StoreSpecialOpeningHours" mapped-by="store" >
+        <cascade>
+            <cascade-persist/>
+            <cascade-remove/>
+        </cascade>
+        </one-to-many>
+
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

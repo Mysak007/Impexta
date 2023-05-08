@@ -1,0 +1,37 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block body %}
+    {{ navigation.render() }}
+    {% block flashMessages %}
+        {{ parent() }}
+    {% endblock %}
+    <main class="container">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData,  'security') }}</div>
+        {% endif %}
+        <section class="LoginRegistration">
+            <form action="{{ path('user_eshop_security_shop_user_login') }}" method="post"
+                  class="LoginRegistration-form Form">
+                <h1 class="LoginRegistration-headline">Přihlášení</h1>
+                <div class="Form-inputWrapper">
+                    <label for="email">Email</label>
+                    <input class="Form-input" type="email" name="email" placeholder="Email"
+                           value="{{ last_username|default('') }}"/>
+                </div>
+                <div class="Form-inputWrapper">
+                    <label>Heslo</label>
+                    <input type="password" name="password" placeholder="Heslo" class="Form-input"/>
+                </div>
+                <a href="{{ path('user_eshop_security_shop_user_forgotten_password') }}"
+                   class="LoginRegistration-link LoginRegistration-link--form">
+                    Zapomenuté heslo
+                </a>
+                <button type="submit" class="Form-submit">Přihlásit se</button>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+            </form>
+        </section>
+    </main>
+    {{ footer.render() }}
+{% endblock %}

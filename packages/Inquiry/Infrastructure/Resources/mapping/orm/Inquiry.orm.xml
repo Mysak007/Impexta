@@ -1,0 +1,35 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Inquiry\Domain\Entity\Inquiry" table="inquiry">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <many-to-one field="assignee" target-entity="Impexta\User\Domain\Entity\AdminUser">
+            <join-column name="assignee_id" nullable="true"/>
+        </many-to-one>
+        <field name="origin" type="inquiry_origin"/>
+        <field name="receivedAt" type="date_immutable"/>
+        <field name="expiration" type="date_immutable"/>
+        <many-to-one field="client" target-entity="Impexta\Client\Domain\Entity\Client">
+            <join-column name="client_id" nullable="false"/>
+        </many-to-one>
+        <field name="sale" type="float"/>
+        <field name="note" type="text" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <one-to-many field="itemRequests" target-entity="Impexta\Inquiry\Domain\Entity\InquiryItemRequest" mapped-by="inquiry" fetch="EAGER">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

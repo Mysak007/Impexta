@@ -1,0 +1,31 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Warehouse\Domain\Entity\WarehouseOrder" table="warehouse_order">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="warehouse" type="warehouse"/>
+
+        <field name="state" type="warehouse_order_state"/>
+
+        <many-to-one field="creator" target-entity="Impexta\User\Domain\Entity\AdminUser"/>
+
+        <one-to-many field="orderItems" target-entity="Impexta\Warehouse\Domain\Entity\WarehouseOrderItem" mapped-by="warehouseOrder">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

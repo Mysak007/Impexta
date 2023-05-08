@@ -1,0 +1,28 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import '@order/Eshop/components/orderCompleteComponents/_success.html.twig' as success %}
+{% import '@order/Eshop/components/orderCompleteComponents/_paymentFail.html.twig' as paymentFail %}
+{% import '@order/Eshop/components/orderCompleteComponents/_fail.html.twig' as fail %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container">
+        <div>
+            {% if status == 'success' %}
+                {{ success.render(cartItems,totalPrice) }}
+            {% elseif status == 'paymentFail' %}
+                {{ paymentFail.render(cartItems,totalPrice) }}
+            {% else %}
+                {{ fail.render }}
+            {% endif %}
+        </div>
+        <div class="ThankYou-exit">
+            <button type="submit" class="Button Button--reversed">
+                <object type="image/svg+xml" data="{{ asset('build/svg/ios-arrow-back.svg') }}" class="Cart-btnImg"></object>
+                <span class="Cart-update">Zpět na hlavní stránku</span>
+            </button>
+        </div>
+    </main>
+    {{ footer.render() }}
+{% endblock %}

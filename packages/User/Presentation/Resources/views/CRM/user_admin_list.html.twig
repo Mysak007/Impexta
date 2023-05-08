@@ -1,0 +1,76 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam administrátorů{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Jméno a příjmení</th>
+                            <th>Přihlašovací jméno</th>
+                            <th>Role</th>
+                            <th>Aktivní</th>
+                            <th>Vytvořeno</th>
+                            <th>Poslední úprava</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for admin in admins %}
+                            <tr>
+                                <td>
+                                    {{ admin.id }}
+                                </td>
+                                <td>
+                                    {{ admin }}
+                                </td>
+                                <td>
+                                    {{ admin.username }}
+                                </td>
+                                <td>
+                                    {% for role in admin.roles %}
+                                        {{ enum_readable_for(userEnum, role) }}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    {{ label.render(admin.enabled) }}
+                                </td>
+                                <td>
+                                    {{ admin.createdAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    {{ admin.updatedAt|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    {% if is_granted(constant('Impexta\\User\\Infrastructure\\Security\\AdminUserCrudVoter::VIEW'), admin) %}
+                                        <a href="{{ path('user_crm_admin_user_detail', {'id': admin.id}) }}"
+                                           class="btn btn-primary btn-sm">Otevřít</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% if is_granted(constant('Impexta\\User\\Infrastructure\\Security\\AdminUserCrudVoter::CREATE'), user_class) %}
+                            {{ add_button.render(path('user_crm_admin_user_create')) }}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

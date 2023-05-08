@@ -1,0 +1,55 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+
+{% block custom_title %}Seznam vozidel{% endblock %}
+{% block custom_page_title %}Seznam vozidel{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Přidat vozidlo</h3>
+                    {{ add_button.render(path('car_crm_car_create')) }}
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th width="15%">Výrobce</th>
+                            <th width="15%">Kategorie</th>
+                            <th width="15%">Model</th>
+                            <th width="15%">Rok výroby</th>
+                            <th width="15%">Motor</th>
+                            <th width="15%">Schovat na eshopu</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for car in cars %}
+                            <tr>
+                                <td>{{ car.manufacturer.name }}</td>
+                                <td>{{ car.carcategory.readable }}</td>
+                                <td>{{ car.model }}</td>
+                                <td>{{ car.yearOfManufacture }}</td>
+                                <td>{{ car.engineCapacity }}</td>
+                                <td>{{ label.render(car.hideOnEshop) }}</td>
+                                <td><a href="{{ path('car_crm_car_edit',{'id':car.id}) }}">
+                                        <i class="far fa-edit"></i></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

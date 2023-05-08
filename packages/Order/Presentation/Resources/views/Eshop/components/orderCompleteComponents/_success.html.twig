@@ -1,0 +1,39 @@
+{% macro render(cartItems,totalPrice) %}
+    {% import '@order/Eshop/components/cartComponents/_cartWrapper.html.twig' as cartWrapper %}
+    <div class="ThankYou">
+        <div class="ThankYou-top">
+            <h1>Děkujeme za objednávku</h1>
+        </div>
+        <div class="ThankYou-content">
+            <div class="Order-formPart ThankYou-formPart">
+                <div class="FormPart">
+                    <div class="FormPart-top">
+                        <h2 class="FormPart-headline">Rekapitulace objednávky</h2>
+                    </div>
+                    <div class="FormPart-content">
+                        {{ cartWrapper.render(cartItems,totalPrice) }}
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Způsob dopravy</strong>
+                            <span class="Order-recapText--light">Kurýr</span>
+                        </div>
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Způsob platby</strong>
+                            <span class="Order-recapText--light">Online</span>
+                        </div>
+                        <div class="Form-inputWrapper Form-inputWrapper--row">
+                            <strong>Doručovací adresa</strong>
+                            <span class="Order-recapText--light">Falešná ulice 125, Falešnof, 120 56</span>
+                        </div>
+                    </div>
+                    <div class="FormPart">
+                        <span class="Order-recapText">Celkem k úhradě:&nbsp;25000&nbsp;Kč</span>
+                        <span class="Order-recapText Order-recapText--small">Bez DPH:&nbsp;25000&nbsp;Kč</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ThankYou-googleMap">
+                google maps
+            </div>
+        </div>
+    </div>
+{% endmacro %}

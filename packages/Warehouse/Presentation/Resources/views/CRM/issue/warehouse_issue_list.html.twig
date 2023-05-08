@@ -1,0 +1,63 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Seznam výdejek ze skladu {{ warehouse.readable }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Číslo dokumentu</th>
+                            <th>Vytvořil</th>
+                            <th>Kód</th>
+                            <th>Datum</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for warehouseIssue in warehouseIssues %}
+                            <tr>
+                                <td>
+                                    {{ warehouseIssue.id }}
+                                </td>
+                                <td>
+                                    {{ warehouseIssue.documentId }}
+                                </td>
+                                <td>
+                                    {{ warehouseIssue.createdBy }}
+                                </td>
+                                <td>
+                                    {{ warehouseIssue.internalCode }}
+                                </td>
+                                <td>
+                                    {{ warehouseIssue.date|date('d.m.Y') }}
+                                </td>
+                                <td>
+                                    <a href="{{ path('warehouse_crm_warehouse_issue_detail',
+                                        {'id': warehouseIssue.id, 'warehouse':warehouse.value}) }}"
+                                           class="btn btn-primary btn-sm">Otevřít</a>
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            {#{{ add_button.render(path('warehouse_crm_warehouse_order_create')) }} TODO doplnit create #}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

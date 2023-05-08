@@ -1,0 +1,56 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_page_title %}Výpis cen dopravy{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Druhy dopravy
+                        {{ add_button.render(path('shipping_crm_create_shipping_method_pricing')) }}
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th>Název</th>
+                            <th>Metoda</th>
+                            <th>Země</th>
+                            <th>Cena dopravy</th>
+                            <th>Limit nadváhy</th>
+                            <th>Cena za nadváhu</th>
+                            <th>Cena za dobírku</th>
+                            <th>Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for pricing in pricings %}
+                            <tr>
+                                <td>{{ pricing.name }}</td>
+                                <td>{{ pricing.shippingMethod }}</td>
+                                <td>{{ pricing.country }}</td>
+                                <td>{{ pricing.price|money }}</td>
+                                <td>{{ pricing.overWeightLimit|default('---') }}</td>
+                                <td>{{ pricing.overWeightPrice|money }}</td>
+                                <td>{{ pricing.cashOnDeliveryFee|money }}</td>
+                                <td>
+                                    <a href="{{ path('shipping_crm_update_shipping_method_pricing',
+                                        {'id':pricing.id}) }}" class="btn btn-primary btn-sm">Otevřít</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

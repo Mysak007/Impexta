@@ -1,0 +1,38 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@product/CRM/second_hand_product/second_hand_product_macro.html.twig' as macro %}
+
+{% block custom_page_title %}Nová položka{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('product_crm_second_hand_product_list') }}{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form,{'attr': {'data-controller': 'form-collection'}}) }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body">
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.perex) }}
+                    {{ form_row(form.description) }}
+                    {{ form_row(form.price) }}
+                    {{ form_row(form.vatRate) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div data-form-collection-target="prototypeDiv"
+                 data-prototype="{{ macro.printRow(form.images.vars.prototype)|e('html_attr') }}"
+                 data-count="{{ form.images | length }}">
+            </div>
+
+            <button type="button" class="add-row btn btn-primary"
+                    data-action="click->form-collection#addFormToCollection">
+                Přidat fotku
+            </button>
+
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+            {{ form_row(form._token) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

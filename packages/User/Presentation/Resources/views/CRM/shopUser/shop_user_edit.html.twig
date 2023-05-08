@@ -1,0 +1,30 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Uživatel:{{ shopUser.email }}{% endblock %}
+{% block custom_page_title %}{{ shopUser.email }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('user_crm_shop_user_detail', {'id': shopUser.id}) }}{% endblock %}
+
+{% set allow_remove = can_remove %}
+{% block remove_path %}
+    {{ path('user_crm_shop_user_delete', {'id': shopUser.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-body">
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                    {{ form_row(form.enabled) }}
+                    {{ form_row(form.client, {'attr': {'data-controller': 'select2'}}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_row(form._token) }}
+    <button type="submit" class="btn btn-primary pull-right">Uložit</button>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

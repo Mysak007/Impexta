@@ -1,0 +1,22 @@
+{% macro render() %}
+    <div class="Sort">
+        <button class="Sort-cta">
+            <img src="{{ asset('build/svg/Sort.svg') }}" alt="Ikona." />
+            <p>Seřadit podle</p>
+        </button>
+        <ul class="Sort-options Sort-options--hidden">
+            <li class="Sort-linkWrapper">
+                <a class="Sort-link" href="#">Nejprodávanější</a>
+            </li>
+            <li class="Sort-linkWrapper">
+                <a class="Sort-link" href="#">Od nejlevnějšího</a>
+            </li>
+            <li class="Sort-linkWrapper">
+                <a class="Sort-link" href="#">Od nejdražšího</a>
+            </li>
+            <li class="Sort-linkWrapper">
+                <a class="Sort-link" href="#">Nově přidané</a>
+            </li>
+        </ul>
+    </div>
+{% endmacro %}

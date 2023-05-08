@@ -1,0 +1,31 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Client\Domain\Entity\ClientCar" table="client_car">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <many-to-one field="client" target-entity="Impexta\Client\Domain\Entity\Client" inversed-by="clientCars">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="client_id" nullable="false" on-delete="CASCADE"/>
+        </many-to-one>
+        <many-to-one field="car" target-entity="Impexta\Car\Domain\Entity\Car">
+            <join-column name="car_id" nullable="false"/>
+        </many-to-one>
+        <field name="licensePlate" type="string" nullable="true"/>
+        <field name="vin" type="string" nullable="true"/>
+        <field name="technicalInspectionExpiresAt" type="date_immutable" nullable="true"/>
+        <field name="ownerName" type="string" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

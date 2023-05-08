@@ -1,0 +1,30 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_title %}Admnistrátor:{admin.username}{% endblock %}
+{% block custom_page_title %}{{ admin.username }} ({{ admin }}){% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('user_crm_admin_user_detail', {'id': admin.id}) }}{% endblock %}
+
+{% set allow_remove = is_granted(constant('Impexta\\User\\Infrastructure\\Security\\AdminUserCrudVoter::DELETE'), admin) %}
+{% block remove_path %}
+    {{ path('user_crm_admin_user_delete', {'id': admin.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-body">
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.surname) }}
+                    {{ form_row(form.password) }}
+                    {{ form_row(form.enabled) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ form_row(form._token) }}
+    <button type="submit" class="btn btn-primary pull-right">Uložit</button>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

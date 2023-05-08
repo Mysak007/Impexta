@@ -1,0 +1,54 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@MicroshopSymfonySurvivalKit/components/date_picker.html.twig' as date_picker %}
+{% import '@warehouse/CRM/income/warehouse_income_macro.html.twig' as macro %}
+
+{% block custom_title %}Příjem na sklad{% endblock %}
+{% block custom_page_title %}Příjem na sklad{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{% endblock %}
+{% block remove_path %}{% endblock %}
+{% block page_stylesheets %}
+    {{ date_picker.init_stylesheets() }}
+{% endblock %}
+
+{% block page_javascripts %}
+    {{ date_picker.init_javascript() }}
+{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form,{'attr': {'data-controller': 'form-collection'}}) }}
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Příjem na sklad
+                    </h3>
+                </div>
+                <div class="box-body">
+                    {{ form_row(form.documentId) }}
+                    {{ form_row(form.warehouse) }}
+                    {{ form_row(form.internalCode) }}
+                    {{ form_row(form.date) }}
+                    {{ form_row(form.note) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div data-form-collection-target="prototypeDiv"
+                 data-prototype="{{ macro.printRow(form.warehouseProducts.vars.prototype)|e('html_attr') }}"
+                 data-count="{{ form.warehouseProducts | length }}">
+            </div>
+            <button type="button" class="add-row btn btn-primary"
+                    data-action="click->form-collection#addFormToCollection">
+                Přidat
+                produkt
+            </button>
+
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+            {{ form_row(form._token) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

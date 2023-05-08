@@ -1,0 +1,25 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_page_title %}Nový uživatel{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('user_crm_admin_user_list') }}{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-body">
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.surname) }}
+                    {{ form_row(form.username) }}
+                    {{ form_row(form.password) }}
+                    {{ form_row(form._token) }}
+                    {{ form_row(form.enabled) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success pull-right">Uložit</button>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

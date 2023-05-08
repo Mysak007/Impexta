@@ -1,0 +1,233 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}{{ client.personalDetails.getName }}{% endblock %}
+{% block custom_page_title %}{{ client.personalDetails.getName }}{% endblock %}
+{% block custom_page_subtitle %}{{ client.billingAddress }}{% endblock %}
+
+{% set allow_edit = true %}
+{% block edit_path %}
+
+    {{ path('client_crm_client_edit', {'id':client.id}) }}
+{% endblock %}
+{% block back_path %}
+    {{ path('client_crm_client_list') }}
+{% endblock %}
+
+
+{% block page_stylesheets %}
+    <style>
+        @media (max-width: 991px) {
+            .shippingAddress {
+                float: none !important;
+            }
+        }
+    </style>
+{% endblock %}
+
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12" style="margin-bottom: 1rem;">
+                    {% if shopUser %}
+                        <a href="{{ path('user_crm_shop_user_detail',{'id':shopUser.id}) }}"
+                           class="btn btn-primary mt-2">Zobrazit uživatele</a>
+                    {% else %}
+                        <a href="{{ path('user_crm_shop_user_create') }}"
+                           class="btn btn-primary mt-2">Vytvořit uživatele</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Osobní údaje</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>ID:</b> <span class="pull-right">{{ client.id }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Jméno</b> <span class="pull-right">{{ client.personalDetails.getName }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>IČ</b> <span class="pull-right">{{ client.personalDetails.taxId }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>DIČ</b> <span class="pull-right">{{ client.personalDetails.vatId }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>IČ DPH</b> <span class="pull-right">{{ client.personalDetails.vatIdSk }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Skupina</b> <span class="pull-right">{{ client.clientGroup }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Měna</b> <span class="pull-right">{{ client.currency }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Země</b> <span class="pull-right">{{ client.country }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Sleva</b> <span class="pull-right">{{ client.sale }} %</span>
+                        </li>
+                        {% if client.note %}
+                            <li class="list-group-item">
+                                <b>Poznámka</b> <span class="pull-right">{{ client.note }}</span>
+                            </li>
+                        {% endif %}
+                        <li class="list-group-item">
+                            <b>Účet vytvořen</b> <span
+                                class="pull-right">{{ client.personalDetails.createdAt|date('d.m.Y') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poslední úprava</b> <span
+                                class="pull-right">{{ client.personalDetails.updatedAt|date('d.m.Y') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                {% for clientCar in client.clientCars %}
+                    <div class="col-md-6">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Vozidlo</h3>
+                            </div>
+                            <div class="box-body box-profile">
+                                <li class="list-group-item">
+                                    <div>Název vozidla<span
+                                            class="pull-right">{{ clientCar.car.manufacturer.name }} {{ clientCar.car.model }} {{ clientCar.car.yearOfManufacture }}</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>SPZ<span class="pull-right">{{ clientCar.licensePlate|default('---') }}</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>VIN<span class="pull-right">{{ clientCar.vin|default('---') }}</span></div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>Konec STK<span
+                                            class="pull-right">
+                                            {% if clientCar.technicalInspectionExpiresAt %}
+                                                {{ clientCar.technicalInspectionExpiresAt|date('d-m-Y') }}
+                                            {% else %}
+                                                -----
+                                            {% endif %}</span>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div>Název<span class="pull-right">{{ clientCar.ownerName|default('---') }}</span>
+                                    </div>
+                                </li>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% if client.logo %}
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+                        <img class="img-responsive img-bordered center-block"
+                             src="{{ asset('uploads/' ~ client.logo) | imagine_filter('client_crm_detail_thumbnail') }}"
+                             alt="logo">
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Kontaktní údaje</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <li class="list-group-item">
+                        <div>Email<span class="pull-right">{{ client.contactDetails.email }}</span></div>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Tel. číslo<span class="pull-right">{{ client.contactDetails.phone }}</span></div>
+                    </li>
+                </div>
+            </div>
+        </div>
+        {% if client.bankAccount %}
+            <div class="col-md-4">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Bankovní údaje</h3>
+                        <a href="{{ path('client_crm_client_bank_account_delete', {'id': client.id }) }}"
+                           onclick="return confirm('Opravdu chcete odstranit bankovní účet?');">
+                            <i class="far fa-trash-alt text-red"></i>
+                        </a>
+                    </div>
+                    <div class="box-body box-profile">
+                        <li class="list-group-item">
+                            <div>Banka<span class="pull-right">{{ client.bankAccount.bankName }}</span></div>
+                        </li>
+                        <li class="list-group-item">
+                            <div>Č. účtu<span
+                                    class="pull-right">{{ client.bankAccount.number ~ '/' ~ client.bankAccount.bankCode }}</span>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Fakturační adresa</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <li class="list-group-item">
+                        <div>Název adresy<span class="pull-right">{{ client.billingAddress.address.name }}</span></div>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Adresa<span class="pull-right">{{ client.billingAddress }}</span></div>
+                    </li>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 pull-right">
+            {% if client.hasShippingAddress %}
+                {% for shippingAddress in client.shippingAddresses %}
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Doručovací adresa</h3>
+                            <a href="{{ path('client_crm_client_shipping_address_edit', {'id': client.id, 'address_id': shippingAddress.id }) }}">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            {% if allow_remove %}
+                                <a href="{{ path('client_crm_client_shipping_address_delete', {'id': client.id, 'address_id': shippingAddress.id }) }}"
+                                   onclick="return confirm('Opravdu chcete odstranit zasílací adresu?');">
+                                    <i class="far fa-trash-alt text-red"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="box-body box-profile">
+                            <li class="list-group-item">
+                                <div>Název adresy<span class="pull-right">{{ shippingAddress.address.name }}</span>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div>Adresa<span class="pull-right">{{ shippingAddress.address }}</span></div>
+                            </li>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <a href="{{ path('client_crm_client_shipping_address_create', {'id': client.id }) }}"
+               class="btn btn-success pull-right">Vytvořit novou doručovací
+                adresu
+            </a>
+        </div>
+    </div>
+{% endblock %}

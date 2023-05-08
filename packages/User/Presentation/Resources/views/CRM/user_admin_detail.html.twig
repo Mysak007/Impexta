@@ -1,0 +1,48 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+
+{% block custom_page_title %}{{ admin.username }} ({{ admin }}){% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+{% block back_path %}{{ path('user_crm_admin_user_list') }}{% endblock %}
+
+{% set allow_edit = is_granted(constant('Impexta\\User\\Infrastructure\\Security\\AdminUserCrudVoter::EDIT'), admin) %}
+{% block edit_path %}
+    {{ path('user_crm_admin_user_edit', {'id': admin.id}) }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <ul class="list-group list-group-unbordered">
+                        <li class="list-group-item">
+                            <b>ID</b> <span class="pull-right">{{ admin.id }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Jméno a příjmení</b> <span class="pull-right">{{ admin }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Přihlašovací jméno</b> <span class="pull-right">{{ admin.username }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Aktivní</b> <span class="pull-right">{{ label.render(admin.enabled) }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Účet vytvořen</b> <span class="pull-right">{{ admin.createdAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Poslední úprava</b> <span class="pull-right">{{ admin.updatedAt|date('Y-m-d') }}</span>
+                        </li>
+                        <li class="list-group-item">
+                            <b>Role</b> <span class="pull-right">{% for role in admin.roles %}
+                                {{ enum_readable_for(userEnum, role) }}
+                            {% endfor %}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

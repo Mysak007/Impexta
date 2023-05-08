@@ -1,0 +1,31 @@
+{% macro render(user) %}
+    {% set client = user.client ?? client %}
+    <section class="AccountSection">
+        <div class="AccountSection-top">
+            <h2 class="AccountSection-header">Vozidla</h2>
+            <button class="Button Button--primary Button--small">
+                Přidat vozidlo
+            </button>
+        </div>
+        <div class="AccountSection-content AccountSection-content--row">
+            <div>{{ user.client ?? 'Nemáte žádná kompatibilní vozidla.' }}</div>
+            {% if client.clientCars %}
+                {% for clientCar in client.clientCars %}
+                    <div class="AccountSection-item">
+                        <header class="AccountSection-itemHeader">
+                            <h3>{{ clientCar.car.manufacturer.name ~ ' ' ~ clientCar.car.model }}</h3>
+                            <img src="{{ asset('build/svg/ellipsis.svg') }}" alt="Editovat" width="16" height="16"/>
+                        </header>
+                        <main class="AccountSection-itemContent">
+                            <span><strong>Rok výroby:&nbsp;</strong>{{ clientCar.car.yearOfManufacture }}</span>
+                            <span><strong>Motorizace:&nbsp;</strong>{{ clientCar.car.engineCapacity }}</span>
+                            {% if clientCar.vin %}
+                                <span><strong>VIN:&nbsp;</strong>{{ clientCar.vin }}</span>
+                            {% endif %}
+                        </main>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+{% endmacro %}

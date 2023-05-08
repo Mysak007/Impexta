@@ -1,0 +1,28 @@
+{% extends 'Eshop/base.html.twig' %}
+
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import '@product/Eshop/Product/components/_productDetail.html.twig' as productDetail %}
+{% import '@product/Eshop/Product/components/_alternatives.html.twig' as alternatives %}
+{% import 'Eshop/components/_banner.html.twig' as banner %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container">
+        {{ productDetail.render(product) }}
+        <div class="ProductDetail-specification">
+            <p>Produkt je určen pro modely:</p>
+            <ul class="ProductDetail-car">
+                {% for compatibleCar in product.productCard.compatibleCars %}
+                    <li>{{ compatibleCar.car }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {{ alternatives.render(alternativeProducts) }}
+    </main>
+    <section class="Homepage-banner">
+        {{ banner.render() }}
+    </section>
+    {{ footer.render() }}
+{% endblock %}
+

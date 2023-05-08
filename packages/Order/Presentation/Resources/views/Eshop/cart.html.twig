@@ -1,0 +1,42 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+{% import '@order/Eshop/components/cartComponents/_cartWrapper.html.twig' as cartWrapper %}
+{% import 'Eshop/components/_reasons.html.twig' as reasons %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container">
+        <div class="Cart-top">
+            <h1 class="Cart-headline">Košík</h1>
+            <button type="submit" class="Button Button--reversed Button--small">
+                <object type="image/svg+xml" data="{{ asset('build/svg/Icon open-reload_red.svg') }}"
+                        class="Cart-btnImg"></object>
+                <a href="{{ path('order_eshop_order_cart') }}"><span
+                        class="Cart-update">Aktualizovat košík</span></a>
+            </button>
+        </div>
+        {{ cartWrapper.render(cartItems,totalPrice) }}
+        {{ form_start(form) }}
+        <div class="Cart-carOptionWrapper">
+            <div class="Cart-inputWrapper">
+                {% if clientCars is not empty %}
+                    {{ form_row(form.clientCars) }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="Cart-buttons">
+            <a href="{{ path('eshop_homepage') }}" class="Button Button--secondary">
+                <span>Zpět</span>
+            </a>
+            <button type="submit" class="Button Button--primary">
+                <span>Objednat</span>
+            </button>
+        </div>
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+        {{ reasons.render() }}
+    </main>
+    {{ footer.render() }}
+{% endblock %}
+

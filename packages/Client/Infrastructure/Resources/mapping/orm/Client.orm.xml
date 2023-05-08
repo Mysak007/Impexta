@@ -1,0 +1,79 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Client\Domain\Entity\Client" table="client">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <one-to-one field="personalDetails" target-entity="Impexta\Client\Domain\Entity\ClientPersonalDetails">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="personal_details_id" nullable="false" on-delete="CASCADE"/>
+        </one-to-one>
+
+        <one-to-one field="contactDetails" target-entity="Impexta\Client\Domain\Entity\ClientContactDetails">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="contact_details_id" nullable="false" on-delete="CASCADE"/>
+        </one-to-one>
+
+        <one-to-one field="bankAccount" target-entity="Impexta\Client\Domain\Entity\ClientBankAccount">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="bank_account_id" on-delete="CASCADE"/>
+        </one-to-one>
+
+        <one-to-one field="billingAddress" target-entity="Impexta\Client\Domain\Entity\ClientBillingAddress">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+            <join-column name="billing_address_id" nullable="false" on-delete="CASCADE"/>
+        </one-to-one>
+
+        <one-to-one field="shopUser" target-entity="Impexta\User\Domain\Entity\ShopUser" mapped-by="client" />
+
+        <one-to-many field="shippingAddresses" target-entity="Impexta\Client\Domain\Entity\ClientShippingAddress" mapped-by="client">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <field name="clientGroup" type="client_group"/>
+
+        <embedded name="currency" class="Money\Currency"/>
+
+        <field name="country" type="country"/>
+
+        <field name="logo" nullable="true" type="string"/>
+
+        <field name="sale" type="integer"/>
+
+        <field name="note" type="text" nullable="true"/>
+
+        <one-to-many field="clientCars" target-entity="Impexta\Client\Domain\Entity\ClientCar" mapped-by="client">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

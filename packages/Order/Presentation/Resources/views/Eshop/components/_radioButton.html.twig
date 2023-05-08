@@ -1,0 +1,7 @@
+{% macro render(name, value, label) %}
+    <label class="Form-radio">
+        <input type="radio" name="{{ name }}" value="{{ value }}" />
+        <span class="Form-radioControl"></span>
+        <span class="Form-label">{{ label }}</span>
+    </label>
+{% endmacro %}

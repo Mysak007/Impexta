@@ -1,0 +1,39 @@
+{% extends 'CRM/base.html.twig' %}
+{% import '@product/CRM/product/product_macro.html.twig' as macro %}
+
+{% block custom_page_title %}Nová položka{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('product_crm_product_list') }}{% endblock %}
+
+{% block page_content %}
+    {{ form_start(form,{'attr': {'data-controller': 'form-collection'}}) }}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body">
+                    {{ form_row(form.productCard, {
+                        'attr': {
+                            'data-controller': 'select2'
+                        }
+                    }) }}
+                    {{ form_row(form.code) }}
+                    {{ form_row(form.name) }}
+                    {{ form_row(form.slug) }}
+                    {{ form_row(form.manufacturer) }}
+                    {{ form_row(form.weight) }}
+                    {{ form_row(form.leastInStock) }}
+                    {{ form_row(form.needsExtraShipping) }}
+                    {{ form_row(form.showOnEshop) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            {{ form_row(form.uploadedImages) }}
+
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+            {{ form_row(form._token) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': false}) }}
+{% endblock %}

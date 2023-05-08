@@ -1,0 +1,35 @@
+{% extends 'Eshop/base.html.twig' %}
+{% import 'Eshop/components/_reasons.html.twig' as reasons %}
+{% import 'Eshop/components/_footer.html.twig' as footer %}
+{% import 'Eshop/components/_navigation.html.twig' as navigation %}
+
+{% block body %}
+    {{ navigation.render() }}
+    <main class="container LoginRegistration">
+        {{ form_start(form, { attr: { class: 'Form LoginRegistration-form' }}) }}
+        <h1 class="LoginRegistration-headline">Registrace</h1>
+        <div class="Form-inputWrapper">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, { attr: { class: 'Form-input' } }) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div class="Form-inputWrapper">
+            {{ form_label(form.password.password.first) }}
+            {{ form_widget(form.password.password.first, { attr: { class: 'Form-input' }}) }}
+            {{ form_errors(form.password.password.first) }}
+        </div>
+        <div class="Form-inputWrapper">
+            {{ form_label(form.password.password.second) }}
+            {{ form_widget(form.password.password.second, { attr: { class: 'Form-input' }}) }}
+            {{ form_errors(form.password.password.second) }}
+        </div>
+
+        <button type="submit" class="Form-submit">Vytvořit</button>
+
+        {{ form_row(form._token) }}
+        {{ form_end(form, {'render_rest': false}) }}
+        {{ reasons.render() }}
+    </main>
+    {{ footer.render() }}
+{% endblock %}
+

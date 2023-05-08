@@ -1,0 +1,45 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Warehouse\Domain\Entity\WarehouseIssue" table="warehouse_issue">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <field name="documentId" type="string"/>
+
+        <field name="warehouse" type="warehouse"/>
+
+        <field name="internalCode" type="string"/>
+
+        <field name="date" type="datetime_immutable"/>
+
+        <field name="note" type="text" nullable="true"/>
+
+        <field name="createdAt" type="datetime_immutable"/>
+
+        <field name="updatedAt" type="datetime_immutable"/>
+
+        <many-to-one field="createdBy" target-entity="Impexta\User\Domain\Entity\AdminUser">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="admin_user_id" nullable="false"/>
+        </many-to-one>
+
+        <many-to-many field="warehouseProducts" target-entity="Impexta\Warehouse\Domain\Entity\WarehouseProduct">
+            <cascade>
+                <cascade-persist />
+                <cascade-remove />
+            </cascade>
+        </many-to-many>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

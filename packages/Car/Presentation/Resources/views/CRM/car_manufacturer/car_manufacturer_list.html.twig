@@ -1,0 +1,46 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+{% import "@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig" as label %}
+
+{% block custom_page_title %}Seznam výrobců vozidel{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary table-box">
+                <div class="box-header">
+                    <h3 class="box-title">Výrobci vozidel
+                        {{ add_button.render(path('car_crm_car_manufacturer_create')) }}
+                    </h3>
+                </div>
+                <div class="box-body">
+                    <table class="table table-bordered table-hover" data-controller="data-table">
+                        <thead>
+                        <tr>
+                            <th width="60%">Jméno</th>
+                            <th width="20%" class="text-center">Zobrazit na eshopu</th>
+                            <th width="20%">Akce</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for manufacturer in manufacturers %}
+                            <tr>
+                                <td>{{ manufacturer.name }}</td>
+                                <td class="text-center">{{ label.render(manufacturer.showOnEshop) }}</td>
+                                <td><a href="{{ path('car_crm_car_manufacturer_edit',{'id':manufacturer.id}) }}"><i
+                                            class="far fa-edit"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+
+{% block custom_title %}Seznam produktových karet{% endblock %}
+{% block custom_page_title %}Seznam produktových karet{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">Seznam produktových karet</h3>
+        </div>
+        <div class="box-body">
+            <div class="row col-md-12">
+                <table class="table table-bordered table-striped" data-controller="data-table">
+                    <thead>
+                    <tr>
+                        <th>Číslo dílu</th>
+                        <th>Název</th>
+                        <th>Popis</th>
+                        <th>Akce</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key,productCard in productCards %}
+                        <tr role="row" class="odd">
+                            <td>{{ productCard.originalCode }}</td>
+                            <td>{{ productCard.name }}</td>
+                            <td><i class="fas fa-search" data-toggle="modal"
+                                   data-target="#productCard{{ key }}"></i> {{ productCard.description }}</td>
+                            <td><a href="{{ path('product_crm_product_card_detail', {'id':productCard.id}) }}"
+                                   class="btn btn-primary btn-sm">Detail</a>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% for key,productCard in productCards %}
+        <div class="modal fade" id="productCard{{ key }}" style="display: none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title">Kompatibilní produkty</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        {% for product in productCard.products %}
+                            <ul>
+                                <li>
+                                    <b>{{ product.__toString }}</b> - skladem: {{ product.warehouseProducts|length }} ks
+                                    <br>
+                                    Ceny:
+                                    <br>
+                                    <ul>
+
+                                        {% for productPrice in product.prices %}
+                                            {% if productPrice.getClientGroup %}
+                                                <li>
+                                                    {{ productPrice.getClientGroup.readable }}:
+                                                    {{ productPrice.price|money }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    {% endfor %}
+    {{ add_button.render(path('product_crm_product_card_create')) }}
+{% endblock %}

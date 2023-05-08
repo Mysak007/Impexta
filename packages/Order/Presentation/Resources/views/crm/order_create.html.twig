@@ -1,0 +1,139 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@order/crm/order_create_order_item_macro.html.twig' as order_item_macro %}
+
+{% block custom_title %}Vytvořit objednávku{% endblock %}
+{% block custom_page_title %}Vytvořit objednávku{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block back_path %}{{ path('order_crm_order_list') }}{% endblock %}
+
+{% block page_javascripts %}
+    <script type="text/javascript" src="https://secure.smartform.cz/api/v1/smartform.js" async></script>
+
+    <script type="text/javascript">
+        {# This must be here – it does not work when processed by Webpack #}
+        var smartform = smartform || {};
+        const clientSelect = document.querySelector('#warehouse_order__client');
+        const span = document.querySelector('.select2');
+
+        smartform.beforeInit = () => {
+         smartform.setClientId('{{ SMARTFORM_CLIENT_ID }}');
+        }
+
+        clientSelect.addEventListener('select2:select', () => {
+           console.log(clientSelect.selectedIndex);
+       });
+
+        smartform.afterInit = () => {
+         {#smartform.getInstance('smartform-instance-shippingAddress').setCountry('{{  }}');#}
+        };
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    <div class="row">
+        {{ smartform_init() }}
+        {{ form_start(form,{'attr': {'data-controller': 'form-collection order-form'}}) }}
+        <div class="col-md-8">
+            <div class="box box-primary">
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        {{ form_row(form.client, {
+                            'attr': {
+                                'data-order-form-target': 'client',
+                                'class': 'clientInput',
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.clientCar, {
+                            'attr': {
+                                'data-order-form-target': 'clientCar',
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.shippingMethod, {
+                            'attr': {
+                                'data-order-form-target': 'shippingMethod',
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.paymentMethod, {
+                            'attr': {
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.extraSale, {
+                            'attr': {
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_row(form.currency, {
+                            'attr': {
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Kontaktní údaje</h3>
+                </div>
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        {{ form_row(form.selectedShippingAddress, {
+                            'attr': {
+                                'data-order-form-target': 'selectedShippingAddress',
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                    </div>
+                </div>
+                <div class="box-body box-profile">
+                    <div class="form-group">
+                        {{ form_row(form.filledInShippingAddress.address.name, {
+                            'attr': {
+                                'data-order-form-target': 'filledInShippingAddressName',
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                        {{ form_row(form.filledInShippingAddress.address.address.address, {
+                            'label': 'Adresa',
+                            'attr': {
+                                'data-order-form-target': 'filledInShippingAddress',
+                                'class': 'toDisable',
+                            }
+                        }) }}
+                        {{ form_row(form.filledInShippingAddress.address.address,
+                            {'label': false}
+                        ) }}
+                    </div>
+                </div>
+            </div>
+            <div data-form-collection-target="prototypeDiv"
+                 data-prototype="{{ order_item_macro.printRow(form.items.vars.prototype)|e('html_attr') }}"
+                 data-count="{{ form.items | length }}">
+            </div>
+            <button type="button" class="add-row btn btn-primary"
+                    data-action="click->form-collection#addFormToCollection">
+                Přidat položku
+            </button>
+            <button type="submit" class="btn btn-success pull-right">Uložit</button>
+        </div>
+    </div>
+     {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+    </div>
+{% endblock %}

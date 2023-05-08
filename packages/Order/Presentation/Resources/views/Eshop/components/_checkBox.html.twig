@@ -1,0 +1,7 @@
+{% macro render(id, label) %}
+    <label class="Form-checkbox">
+        <input type="checkbox" data-target="{{ id }}" />
+        <span class="Form-checkboxControl"></span>
+        <span class="Form-label">{{ label }}</span>
+    </label>
+{% endmacro %}

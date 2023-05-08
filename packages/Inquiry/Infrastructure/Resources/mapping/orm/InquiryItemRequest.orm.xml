@@ -1,0 +1,41 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="Impexta\Inquiry\Domain\Entity\InquiryItemRequest" table="inquiry_item_request">
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+        <many-to-one field="inquiry" target-entity="Impexta\Inquiry\Domain\Entity\Inquiry" inversed-by="itemRequests">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+            <join-column name="inquiry_id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="productCard" target-entity="Impexta\Product\Domain\Entity\ProductCard">
+            <join-column name="product_card_id" nullable="false"/>
+        </many-to-one>
+        <many-to-one field="clientCar" target-entity="Impexta\Client\Domain\Entity\ClientCar">
+            <join-column name="client_car_id" nullable="true"/>
+        </many-to-one>
+        <many-to-one field="car" target-entity="Impexta\Car\Domain\Entity\Car">
+            <join-column name="car_id" nullable="true"/>
+        </many-to-one>
+        <field name="quantity" type="integer"/>
+        <field name="note" type="text" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable"/>
+        <field name="updatedAt" type="datetime_immutable"/>
+        <one-to-many field="itemOffers" target-entity="Impexta\Inquiry\Domain\Entity\InquiryItemOffer" mapped-by="inquiryItemRequest">
+            <cascade>
+                <cascade-persist/>
+                <cascade-remove/>
+            </cascade>
+        </one-to-many>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

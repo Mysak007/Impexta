@@ -1,0 +1,52 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% import '@MicroshopSymfonySurvivalKit/components/add_button.html.twig' as add_button %}
+{% import '@MicroshopSymfonySurvivalKit/components/boolean_label.html.twig' as label %}
+
+{% block custom_page_title %}Produkty{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% block page_stylesheets %}
+    {{ add_button.init_stylesheets() }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="box">
+        <div class="box-body">
+            <div class="row col-md-12">
+                <table id="product_list_table" class="table table-bordered table-striped" data-controller="data-table">
+                    <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Originální kód</th>
+                        <th>Kód</th>
+                        <th>Výrobce</th>
+                        <th>Eshop</th>
+                        <th>Akce</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in products %}
+                        <tr role="row" class="odd">
+                            <td class="sorting_1">{{ product.name }}</td>
+                            <td>{{ product.productCard.originalCode }}</td>
+                            <td>{{ product.code }}</td>
+                            <td>{{ product.manufacturer }}</td>
+                            <td>{{ label.render(product.showOnEshop) }}</td>
+                            <td class="text-center">
+                                {% if is_granted(constant('Impexta\\Product\\Infrastructure\\Security\\ProductCrudVoter::VIEW'), product) %}
+                                    <a href="{{ path('product_crm_product_detail', {'id': product.id}) }}"
+                                       class="btn btn-primary btn-sm">Otevřít</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% if is_granted(constant('Impexta\\Product\\Infrastructure\\Security\\ProductCrudVoter::CREATE'), product) %}
+                        {{ add_button.render(path('product_crm_product_create')) }}
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

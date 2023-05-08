@@ -1,0 +1,38 @@
+{% macro render(product, form) %}
+    <div class="ProductContainer">
+        <div class="ProductContainer-wrapper">
+            <div class="ProductContainer-content">
+                <div class="ProductContainer-imageWrapper">
+                    {% if product.getMainSecondHandProductImage %}
+                    <img class="ProductContainer-productImg"
+                         src="{{ vich_uploader_asset(product.getMainSecondHandProductImage) | imagine_filter('product_image_thumbnail') }}" alt="{{ product.name }}"/>
+                    {% else %}
+                    <img class="ProductContainer-productImg"
+                         src="https://via.placeholder.com/400x400?text=Impexta" alt="{{ product.name }}"/>
+                    {% endif %}
+                </div>
+                <div class="ProductContainer-basicInfoWrapper">
+                    <h3 class="ProductContainer-textProductName">
+                        <a href="{{ path('product_eshop_second_hand_product_detail', {'slug': product.slug, 'id': product.id }) }}"
+                           class="ProductContainer-link">{{ product.name }}</a>
+                    </h3>
+                    <p class="ProductContainer-textProductDescription">{{ product.perex }}</p>
+                    <p class="ProductContainer-textProductDescription">{{ product.description }}</p>
+                    <div class="ProductContainer-productPricingInformation">
+                        <div class="ProductContainer-pricing">
+                            <ul class="ProductContainer-price">
+                                <li class="Price-main">{{ product.price|money }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="ProductContainer-bottom">
+                        <button type="button" class="Button Button--icon Button--primary interested-in"
+                                data-id="{{ product.id }}" data-bs-toggle="modal" data-bs-target="#contact-form-modal">
+                            Mám zájem
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

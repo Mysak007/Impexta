@@ -1,0 +1,32 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                   https://raw.github.com/doctrine/doctrine2/master/doctrine-mapping.xsd">
+    <entity name="Impexta\Store\Domain\Entity\StoreOpeningHours" table="store_opening_hours">
+        <id name="id" column="id" type="integer">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="store" target-entity="Impexta\Store\Domain\Entity\Store" inversed-by="openingHours">
+            <join-column name="store_id" nullable="false"/>
+        </many-to-one>
+
+        <field name="day" type="integer"/>
+
+        <field name="open" type="boolean"/>
+
+        <field name="opensAt" type="datetime_immutable" nullable="true"/>
+
+        <field name="closesAt" type="datetime_immutable" nullable="true"/>
+
+        <field name="createdAt" type="datetime_immutable"/>
+
+        <field name="updatedAt" type="datetime_immutable"/>
+
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="setCreatedAtToNow"/>
+            <lifecycle-callback type="prePersist" method="setUpdatedAtToNow"/>
+            <lifecycle-callback type="preFlush" method="setUpdatedAtToNow"/>
+        </lifecycle-callbacks>
+    </entity>
+</doctrine-mapping>

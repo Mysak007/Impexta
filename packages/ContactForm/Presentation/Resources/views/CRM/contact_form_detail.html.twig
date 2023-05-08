@@ -1,0 +1,46 @@
+{% extends 'CRM/base.html.twig' %}
+
+{% block custom_page_title %}Kontaktní formulář {{ form.id }}{% endblock %}
+{% block custom_page_subtitle %}{% endblock %}
+
+{% set allow_remove = true %}
+
+{% block remove_path %}
+    {{ path('contact_form_crm_contact_form_delete',  {'id': form.id}) }}
+{% endblock %}
+
+{% block back_path %}
+    {{ path('contact_form_crm_contact_form_list') }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="box box-primary">
+        <div class="box-header with-border">
+        </div>
+        <div class="box-body">
+            <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <b>Jméno</b> <span class="pull-right">{{ form.name }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Email</b> <span class="pull-right">{{ form.email }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Telefon</b> <span class="pull-right">{{ form.phone }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Vin</b> <span class="pull-right">{{ form.vin }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Vytvořeno</b> <span class="pull-right">{{ form.createdAt|date('Y-m-d') }}</span>
+                </li>
+                <li class="list-group-item">
+                    <b>Zpráva</b>
+                </li>
+                <li class="list-group-item">
+                    <div>{{ form.message }}</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
